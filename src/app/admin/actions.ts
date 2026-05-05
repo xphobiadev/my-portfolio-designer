@@ -388,6 +388,54 @@ export async function updateHeroImage(formData: FormData) {
     revalidateAll();
 }
 
+// ─── Save media URL after direct browser→Supabase upload ────────────────────
+// These actions only write the already-uploaded public URL to the DB.
+// The actual file upload happens in the browser (see HeroMediaUpload component)
+// so it never passes through the Vercel serverless function body limit (4.5 MB).
+
+export async function saveHeroVideoUrl(formData: FormData) {
+    const url = formData.get('url') as string;
+    if (!url) return;
+
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+        .from('site_settings')
+        .update({ hero_video_url: url })
+        .eq('id', 1);
+
+    if (error) console.error('saveHeroVideoUrl DB error:', error);
+    revalidateAll();
+}
+
+export async function saveHeroImageUrl(formData: FormData) {
+    const url = formData.get('url') as string;
+    if (!url) return;
+
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+        .from('site_settings')
+        .update({ hero_image_url: url })
+        .eq('id', 1);
+
+    if (error) console.error('saveHeroImageUrl DB error:', error);
+    revalidateAll();
+}
+
+export async function saveProjectCoverUrl(formData: FormData) {
+    const id = formData.get('id') as string;
+    const url = formData.get('url') as string;
+    if (!id || !url) return;
+
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+        .from('projects')
+        .update({ cover_image: url })
+        .eq('id', id);
+
+    if (error) console.error('saveProjectCoverUrl DB error:', error);
+    revalidateAll();
+}
+
 // ─── Project Cover Image ─────────────────────────────────────────────────────
 
 export async function updateProjectCover(formData: FormData) {

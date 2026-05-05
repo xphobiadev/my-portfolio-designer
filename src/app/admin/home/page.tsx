@@ -1,7 +1,9 @@
 import { getSettings, getFeaturedProjects } from '@/lib/data';
-import { updateSettings, updateHomeSettings, updateHeroImage, updateProjectCover } from '../actions';
-import { Video, BarChart3, Type, Layers, Briefcase, MousePointerClick, ImageIcon, Image as ImageLucide, Sparkles } from 'lucide-react';
+import { updateSettings } from '../actions';
+import { BarChart3, Type, Layers, Briefcase, MousePointerClick, Sparkles } from 'lucide-react';
 import type { Project } from '@/lib/types';
+import { HeroMediaUpload } from '../components/HeroMediaUpload';
+import { ProjectCoverUpload } from '../components/ProjectCoverUpload';
 
 export default async function AdminHome() {
     const settings = await getSettings();
@@ -178,12 +180,12 @@ export default async function AdminHome() {
             {/* Featured Projects Cover Images */}
             <div className="admin-card p-6 space-y-5">
                 <div className="flex items-center gap-3 mb-4">
-                    <ImageLucide className="w-4 h-4 text-gold-400" />
+                    <Sparkles className="w-4 h-4 text-gold-400" />
                     <h3 className="text-xs text-gold-400 uppercase tracking-[0.15em] font-bold">Featured Projects — Covers</h3>
                 </div>
 
                 <p className="text-[10px] text-gray-500 leading-relaxed max-w-lg">
-                    Update cover images for featured projects displayed on the homepage.
+                    Update cover images for featured projects displayed on the homepage. Files upload directly from your browser — no size limits.
                 </p>
 
                 {featuredProjects.length === 0 && (
@@ -192,35 +194,7 @@ export default async function AdminHome() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {featuredProjects.slice(0, 6).map((project: Project) => (
-                        <form key={project.id} action={updateProjectCover} className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.01] space-y-3">
-                            <input type="hidden" name="id" value={project.id} />
-                            
-                            <div className="flex items-center gap-2">
-                                <p className="text-[9px] text-gold-400 uppercase tracking-[0.15em] font-bold truncate">{project.title}</p>
-                            </div>
-
-                            <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-obsidian-800 border border-white/[0.04]">
-                                {project.cover_image ? (
-                                    <img src={project.cover_image} alt={project.title} className="w-full h-full object-cover" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <span className="text-[9px] text-gray-700 uppercase tracking-widest">No cover</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            <input
-                                type="file"
-                                name="cover_image"
-                                accept="image/jpeg,image/png,image/webp"
-                                required
-                                className="text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[8px] file:uppercase file:tracking-widest file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors w-full cursor-pointer"
-                            />
-
-                            <button type="submit" className="w-full admin-btn text-[8px] py-2.5">
-                                Update Cover
-                            </button>
-                        </form>
+                        <ProjectCoverUpload key={project.id} project={project} />
                     ))}
                 </div>
             </div>
@@ -291,82 +265,25 @@ export default async function AdminHome() {
                 </div>
             </form>
 
-            {/* Hero Video Upload */}
-            <form action={updateHomeSettings} className="admin-card p-6 space-y-5">
-                <div className="flex items-center gap-3 mb-4">
-                    <Video className="w-4 h-4 text-gold-400" />
-                    <h3 className="text-xs text-gold-400 uppercase tracking-[0.15em] font-bold">Hero Background Video</h3>
-                </div>
+            {/* Hero Video Upload — direct browser→Supabase, bypasses Vercel 4.5MB limit */}
+            <HeroMediaUpload
+                type="video"
+                currentUrl={settings?.hero_video_url}
+                label="Hero Background Video"
+                description="Upload an MP4 or WebM video that loops silently in the hero background (shown on all devices including mobile). Uploads directly from your browser — no server size limits."
+                accept="video/mp4,video/webm"
+                storagePath="settings/hero_video.mp4"
+            />
 
-                <p className="text-[10px] text-gray-500 leading-relaxed max-w-lg">
-                    Upload an MP4 or WebM video that loops silently in the hero background (shown on all devices including mobile).
-                </p>
-
-                {settings?.hero_video_url ? (
-                    <div className="p-3 rounded-xl border border-white/[0.04] bg-white/[0.01] space-y-2">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-[0.2em] font-bold">Current Video:</p>
-                        <video
-                            src={settings.hero_video_url}
-                            muted
-                            playsInline
-                            controls
-                            className="w-full max-w-xs h-24 object-cover rounded-lg border border-white/[0.04]"
-                        />
-                        <p className="text-[8px] text-green-500/70 tracking-wide">✓ Video saved — visible on homepage</p>
-                    </div>
-                ) : (
-                    <div className="p-3 rounded-xl border border-amber-400/10 bg-amber-400/[0.03]">
-                        <p className="text-[9px] text-amber-400/70 tracking-wide">⚠ No video uploaded yet — hero background will be black on mobile</p>
-                    </div>
-                )}
-
-                <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.01]">
-                    <input
-                        type="file"
-                        name="hero_video"
-                        accept="video/mp4,video/webm"
-                        required
-                        className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[9px] file:uppercase file:tracking-widest file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors w-full cursor-pointer"
-                    />
-                </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Upload Video</button>
-                </div>
-            </form>
-
-            {/* Hero Background Image Upload */}
-            <form action={updateHeroImage} className="admin-card p-6 space-y-5">
-                <div className="flex items-center gap-3 mb-4">
-                    <ImageIcon className="w-4 h-4 text-gold-400" />
-                    <h3 className="text-xs text-gold-400 uppercase tracking-[0.15em] font-bold">Hero Background Image</h3>
-                </div>
-
-                <p className="text-[10px] text-gray-500 leading-relaxed max-w-lg">
-                    Upload a background image for the hero section (1920×1080 or larger recommended).
-                </p>
-
-                {settings?.hero_image_url && (
-                    <div className="p-3 rounded-xl border border-white/[0.04] bg-white/[0.01]">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-[0.2em] mb-2 font-bold">Current Image:</p>
-                        <img src={settings.hero_image_url} alt="Current hero" className="w-full max-w-xs h-32 object-cover rounded-lg border border-white/[0.04]" />
-                    </div>
-                )}
-
-                <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.01]">
-                    <input
-                        type="file"
-                        name="hero_image"
-                        accept="image/jpeg,image/png,image/webp"
-                        required
-                        className="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[9px] file:uppercase file:tracking-widest file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors w-full cursor-pointer"
-                    />
-                </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Upload Image</button>
-                </div>
-            </form>
+            {/* Hero Image Upload — direct browser→Supabase */}
+            <HeroMediaUpload
+                type="image"
+                currentUrl={settings?.hero_image_url}
+                label="Hero Background Image"
+                description="Upload a fallback background image for the hero section (1920×1080 or larger recommended). Used when no video is set. Uploads directly from your browser."
+                accept="image/jpeg,image/png,image/webp"
+                storagePath={`settings/hero_image.jpg`}
+            />
         </div>
     );
 }
