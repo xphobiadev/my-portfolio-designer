@@ -7,6 +7,11 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Helper to revalidate all pages (including all locale-prefixed routes)
+function revalidateAll() {
+    revalidatePath('/', 'layout');
+}
+
 // ─── Helper: Upload file to Supabase Storage ─────────────────────────────────
 
 async function uploadFile(file: File, path: string): Promise<string | null> {
@@ -75,10 +80,7 @@ export async function createProject(formData: FormData) {
 
     if (error) console.error("Create project error:", error);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/projects');
-    revalidatePath('/work');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 export async function updateProject(formData: FormData) {
@@ -127,11 +129,7 @@ export async function updateProject(formData: FormData) {
     const { error } = await supabase.from('projects').update(updates).eq('id', id);
     if (error) console.error("Update project error:", error);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/projects');
-    revalidatePath(`/admin/projects/${id}`);
-    revalidatePath('/work');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 export async function deleteProject(formData: FormData) {
@@ -140,10 +138,7 @@ export async function deleteProject(formData: FormData) {
 
     await supabase.from('projects').delete().eq('id', id);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/projects');
-    revalidatePath('/work');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 export async function toggleFeatured(formData: FormData) {
@@ -152,9 +147,7 @@ export async function toggleFeatured(formData: FormData) {
 
     await supabase.from('projects').update({ is_featured: !featured }).eq('id', id);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/projects');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 // ─── Categories ──────────────────────────────────────────────────────────────
@@ -174,9 +167,7 @@ export async function createCategory(formData: FormData) {
 
     if (error) console.error("Create category error:", error);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/categories');
-    revalidatePath('/work');
+    revalidateAll();
 }
 
 export async function deleteCategory(formData: FormData) {
@@ -185,9 +176,7 @@ export async function deleteCategory(formData: FormData) {
 
     await supabase.from('categories').delete().eq('id', id);
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/categories');
-    revalidatePath('/work');
+    revalidateAll();
 }
 
 // ─── Settings ────────────────────────────────────────────────────────────────
@@ -310,13 +299,7 @@ export async function updateSettings(formData: FormData) {
         await supabase.from('site_settings').update({ footer_text }).eq('id', 1);
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/admin/home');
-    revalidatePath('/admin/about');
-    revalidatePath('/admin/contact');
-    revalidatePath('/');
-    revalidatePath('/about');
-    revalidatePath('/contact');
+    revalidateAll();
 }
 
 export async function updateHomeSettings(formData: FormData) {
@@ -333,8 +316,7 @@ export async function updateHomeSettings(formData: FormData) {
 
     if (error) console.error("Upload Error (updateHomeSettings):", error);
 
-    revalidatePath('/admin/home');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 export async function updateHeroImage(formData: FormData) {
@@ -360,8 +342,7 @@ export async function updateHeroImage(formData: FormData) {
     const imageUrl = `${supabaseUrl}/storage/v1/object/public/portfolio_media/${data.path}`;
     await supabase.from('site_settings').update({ hero_image_url: imageUrl }).eq('id', 1);
 
-    revalidatePath('/admin/home');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 // ─── Project Cover Image ─────────────────────────────────────────────────────
@@ -379,11 +360,7 @@ export async function updateProjectCover(formData: FormData) {
     const { error } = await supabase.from('projects').update({ cover_image }).eq('id', id);
     if (error) console.error("Update project cover error:", error);
 
-    revalidatePath('/admin/home');
-    revalidatePath('/admin/projects');
-    revalidatePath(`/admin/projects/${id}`);
-    revalidatePath('/work');
-    revalidatePath('/');
+    revalidateAll();
 }
 
 // ─── Contact Messages ────────────────────────────────────────────────────────
@@ -403,7 +380,7 @@ export async function submitContactMessage(formData: FormData) {
 
     if (error) console.error("Submit contact message error:", error);
 
-    revalidatePath('/admin/messages');
+    revalidateAll();
 }
 
 export async function markMessageRead(formData: FormData) {
@@ -411,7 +388,7 @@ export async function markMessageRead(formData: FormData) {
     if (!id) return;
 
     await supabase.from('contact_messages').update({ is_read: true }).eq('id', id);
-    revalidatePath('/admin/messages');
+    revalidateAll();
 }
 
 export async function deleteMessage(formData: FormData) {
@@ -419,5 +396,5 @@ export async function deleteMessage(formData: FormData) {
     if (!id) return;
 
     await supabase.from('contact_messages').delete().eq('id', id);
-    revalidatePath('/admin/messages');
+    revalidateAll();
 }
