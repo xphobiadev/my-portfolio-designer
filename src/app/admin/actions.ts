@@ -1,11 +1,31 @@
 "use server"
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Lazy initialization to ensure env vars are available at runtime on Vercel
+let _supabase: SupabaseClient | null = null;
+
+function getSupabaseAdmin(): SupabaseClient {
+    if (!_supabase) {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseKey) {
+            console.error('[Supabase Admin] Missing environment variables:', {
+                hasUrl: !!supabaseUrl,
+                hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+                hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            });
+            throw new Error('Supabase environment variables are not configured. Please check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your Vercel project settings.');
+        }
+
+        _supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: false },
+        });
+    }
+    return _supabase;
+}
 
 // Helper to revalidate all pages (including all locale-prefixed routes)
 function revalidateAll() {
@@ -17,6 +37,7 @@ function revalidateAll() {
 async function uploadFile(file: File, path: string): Promise<string | null> {
     if (!file || file.size === 0) return null;
 
+    const supabase = getSupabaseAdmin();
     await supabase.storage.createBucket('portfolio_media', { public: true }).catch(() => { });
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -31,7 +52,7 @@ async function uploadFile(file: File, path: string): Promise<string | null> {
         return null;
     }
 
-    return `${supabaseUrl}/storage/v1/object/public/portfolio_media/${data.path}`;
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/portfolio_media/${data.path}`;
 }
 
 // ─── Projects ────────────────────────────────────────────────────────────────
@@ -60,6 +81,7 @@ export async function createProject(formData: FormData) {
     const video_url = await uploadFile(videoFile, `projects/${slug}/video_${Date.now()}_${videoFile?.name?.replace(/\s+/g, '_') || 'vid'}`);
     const audio_url = await uploadFile(audioFile, `projects/${slug}/audio_${Date.now()}_${audioFile?.name?.replace(/\s+/g, '_') || 'aud'}`);
 
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('projects').insert([{
         title,
         subtitle,
@@ -126,6 +148,7 @@ export async function updateProject(formData: FormData) {
     if (video_url) updates.video_url = video_url;
     if (audio_url) updates.audio_url = audio_url;
 
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('projects').update(updates).eq('id', id);
     if (error) console.error("Update project error:", error);
 
@@ -136,6 +159,7 @@ export async function deleteProject(formData: FormData) {
     const id = formData.get('id') as string;
     if (!id) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.from('projects').delete().eq('id', id);
 
     revalidateAll();
@@ -145,6 +169,7 @@ export async function toggleFeatured(formData: FormData) {
     const id = formData.get('id') as string;
     const featured = formData.get('is_featured') === 'true';
 
+    const supabase = getSupabaseAdmin();
     await supabase.from('projects').update({ is_featured: !featured }).eq('id', id);
 
     revalidateAll();
@@ -159,6 +184,7 @@ export async function createCategory(formData: FormData) {
 
     const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('categories').insert([{
         name,
         slug,
@@ -174,6 +200,7 @@ export async function deleteCategory(formData: FormData) {
     const id = formData.get('id') as string;
     if (!id) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.from('categories').delete().eq('id', id);
 
     revalidateAll();
@@ -184,6 +211,8 @@ export async function deleteCategory(formData: FormData) {
 export async function updateSettings(formData: FormData) {
     const type = formData.get('type') as string;
     if (!type) return;
+
+    const supabase = getSupabaseAdmin();
 
     if (type === 'about') {
         const about_bio = formData.get('about_bio') as string;
@@ -306,6 +335,7 @@ export async function updateHomeSettings(formData: FormData) {
     const file = formData.get('hero_video') as File;
     if (!file || file.size === 0) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.storage.createBucket('portfolio_media', { public: true }).catch(() => { });
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -323,6 +353,7 @@ export async function updateHeroImage(formData: FormData) {
     const file = formData.get('hero_image') as File;
     if (!file || file.size === 0) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.storage.createBucket('portfolio_media', { public: true }).catch(() => { });
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -339,7 +370,7 @@ export async function updateHeroImage(formData: FormData) {
         return;
     }
 
-    const imageUrl = `${supabaseUrl}/storage/v1/object/public/portfolio_media/${data.path}`;
+    const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/portfolio_media/${data.path}`;
     await supabase.from('site_settings').update({ hero_image_url: imageUrl }).eq('id', 1);
 
     revalidateAll();
@@ -357,6 +388,7 @@ export async function updateProjectCover(formData: FormData) {
     const cover_image = await uploadFile(file, `projects/${id}/cover_${Date.now()}_${file.name.replace(/\s+/g, '_')}`);
     if (!cover_image) return;
 
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('projects').update({ cover_image }).eq('id', id);
     if (error) console.error("Update project cover error:", error);
 
@@ -372,6 +404,7 @@ export async function submitContactMessage(formData: FormData) {
 
     if (!name || !email || !message) return;
 
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('contact_messages').insert([{
         name,
         email,
@@ -387,6 +420,7 @@ export async function markMessageRead(formData: FormData) {
     const id = formData.get('id') as string;
     if (!id) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.from('contact_messages').update({ is_read: true }).eq('id', id);
     revalidateAll();
 }
@@ -395,6 +429,7 @@ export async function deleteMessage(formData: FormData) {
     const id = formData.get('id') as string;
     if (!id) return;
 
+    const supabase = getSupabaseAdmin();
     await supabase.from('contact_messages').delete().eq('id', id);
     revalidateAll();
 }
