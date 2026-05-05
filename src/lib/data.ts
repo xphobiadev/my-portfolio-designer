@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { connection } from 'next/server';
 import type { Project, Category, SiteSettings, ContactMessage } from './types';
 
 function getSupabase() {
@@ -6,6 +7,11 @@ function getSupabase() {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
     return createClient(supabaseUrl, supabaseKey, {
         auth: { persistSession: false },
+        global: {
+            fetch: (url, options = {}) => {
+                return fetch(url, { ...options, cache: 'no-store' });
+            },
+        },
     });
 }
 
@@ -13,6 +19,7 @@ function getSupabase() {
 
 export async function getProjects(): Promise<Project[]> {
     try {
+        await connection();
         const supabase = getSupabase();
         const { data, error } = await supabase
             .from('projects')
@@ -32,6 +39,7 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getFeaturedProjects(): Promise<Project[]> {
     try {
+        await connection();
         const supabase = getSupabase();
         const { data, error } = await supabase
             .from('projects')
@@ -58,6 +66,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('projects')
@@ -70,6 +79,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 }
 
 export async function getProjectById(id: string): Promise<Project | null> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('projects')
@@ -82,6 +92,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
 }
 
 export async function getProjectsByCategory(category: string): Promise<Project[]> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('projects')
@@ -99,6 +110,7 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
 // ─── Categories ──────────────────────────────────────────────────────────────
 
 export async function getCategoriesList(): Promise<Category[]> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('categories')
@@ -140,6 +152,7 @@ export async function getCategoriesList(): Promise<Category[]> {
 // ─── Settings ────────────────────────────────────────────────────────────────
 
 export async function getSettings(): Promise<SiteSettings | null> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('site_settings')
@@ -157,6 +170,7 @@ export async function getSettings(): Promise<SiteSettings | null> {
 // ─── Contact Messages ────────────────────────────────────────────────────────
 
 export async function getContactMessages(): Promise<ContactMessage[]> {
+    await connection();
     const supabase = getSupabase();
     const { data, error } = await supabase
         .from('contact_messages')
@@ -171,6 +185,7 @@ export async function getContactMessages(): Promise<ContactMessage[]> {
 }
 
 export async function getUnreadMessagesCount(): Promise<number> {
+    await connection();
     const supabase = getSupabase();
     const { count, error } = await supabase
         .from('contact_messages')
