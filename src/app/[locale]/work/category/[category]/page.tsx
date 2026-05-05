@@ -6,6 +6,8 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getDictionary } from '@/i18n/getDictionary';
 import type { Locale } from '@/i18n/config';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CategoryPage({ params }: { params: Promise<{ locale: string; category: string }> }) {
     const { locale, category } = await params;
     const dict = await getDictionary(locale as Locale);

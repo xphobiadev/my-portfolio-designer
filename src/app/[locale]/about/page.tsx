@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getDictionary } from '@/i18n/getDictionary';
 import type { Locale } from '@/i18n/config';
 
+export const dynamic = 'force-dynamic';
+
 export default async function About({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const dict = await getDictionary(locale as Locale);
