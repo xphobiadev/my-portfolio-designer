@@ -55,8 +55,8 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             <header
                 className={`fixed top-0 w-full z-50 transition-all duration-700 ease-out ${
                     isScrolled
-                        ? 'py-3 md:py-4 glass border-b border-white/[0.03]'
-                        : 'py-5 md:py-7 bg-transparent'
+                        ? 'py-3 md:py-4 bg-black/80 backdrop-blur-xl border-b border-white/[0.06]'
+                        : 'py-4 md:py-5 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm border-b border-white/[0.03]'
                 }`}
             >
                 <div className="container mx-auto px-4 sm:px-6 md:px-12 flex justify-between items-center">

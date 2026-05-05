@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Play, ArrowUpRight } from "lucide-react";
+import { ArrowRight, Play, ArrowUpRight, ChevronDown } from "lucide-react";
 import { getFeaturedProjects, getSettings } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { getDictionary } from "@/i18n/getDictionary";
@@ -37,7 +37,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               controls={false}
               preload="none"
               poster={settings.hero_image_url ?? undefined}
-              className="hero-video opacity-40"
+              className="hero-video opacity-50"
               src={settings.hero_video_url}
               aria-hidden="true"
             />
@@ -48,18 +48,22 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               src={settings.hero_image_url}
               alt=""
               fill
-              className="object-cover opacity-40 scale-105"
+              className="object-cover opacity-50 scale-105"
               priority
               sizes="100vw"
               quality={75}
             />
           )}
+          {/* Cinematic fallback pattern when no media at all */}
+          {!settings?.hero_video_url && !settings?.hero_image_url && (
+            <div className="absolute inset-0 hero-fallback-bg" aria-hidden="true" />
+          )}
           {/* Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-10" aria-hidden="true" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 z-10" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/30 z-10" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 z-10" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background z-10" aria-hidden="true" />
           {/* Ambient glows — hidden on mobile for perf */}
-          <div className="hidden md:block absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-gold-400/[0.04] blur-[150px] rounded-full z-10 animate-pulse-glow" aria-hidden="true" />
+          <div className="hidden md:block absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-gold-400/[0.05] blur-[150px] rounded-full z-10 animate-pulse-glow" aria-hidden="true" />
           <div className="hidden md:block absolute bottom-1/4 right-1/3 w-[300px] h-[300px] bg-gold-400/[0.03] blur-[100px] rounded-full z-10 animate-float" aria-hidden="true" />
           {/* Scan line — desktop only */}
           <div className="hidden md:block absolute inset-0 z-20 pointer-events-none opacity-[0.02]" aria-hidden="true">
@@ -67,73 +71,111 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </div>
 
-        {/* Hero Content */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 z-30 pt-24 md:pt-28">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8 animate-fade-in-up">
-              <span className="w-8 md:w-12 h-[1px] bg-gold-400/60" aria-hidden="true" />
-              <span className="text-gold-400 text-[10px] md:text-[11px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-medium">
-                {settings?.site_title || dict.home.heroEyebrow}
-              </span>
+        {/* Hero Content — vertically centered with proper top offset for fixed header */}
+        <div className="container mx-auto px-5 sm:px-8 md:px-12 z-30 pt-20 md:pt-24 pb-24 md:pb-32 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left column: text content */}
+            <div className="max-w-2xl">
+              {/* Eyebrow label — improved readability */}
+              <div className="flex items-center gap-3 mb-5 md:mb-7 animate-fade-in-up">
+                <span className="w-8 md:w-10 h-[1px] bg-gold-400/70" aria-hidden="true" />
+                <span className="text-gold-400 text-[11px] md:text-[12px] tracking-[0.25em] md:tracking-[0.3em] uppercase font-semibold">
+                  {settings?.site_title || dict.home.heroEyebrow}
+                </span>
+              </div>
+
+              {/* Main heading — controlled line breaks */}
+              <h1 className="text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[5rem] xl:text-[5.5rem] font-heading font-bold uppercase leading-[0.88] tracking-[-0.02em] mb-5 md:mb-7 animate-fade-in-up delay-200">
+                {settings?.hero_title ? (
+                  <>
+                    <span className="block">{settings.hero_title.split(' ').slice(0, 2).join(' ')}</span>
+                    <span className="block gradient-text">{settings.hero_title.split(' ').slice(2, 4).join(' ')}</span>
+                    <span className="block text-white/80">{settings.hero_title.split(' ').slice(4).join(' ')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">{dict.home.heroTitle.split(' ').slice(0, 2).join(' ')}</span>
+                    <span className="block gradient-text">{dict.home.heroTitle.split(' ').slice(2, 4).join(' ')}</span>
+                    <span className="block text-white/80">{dict.home.heroTitle.split(' ').slice(4).join(' ')}</span>
+                  </>
+                )}
+              </h1>
+
+              {/* Subtitle — improved size ratio */}
+              <p className="text-gray-300 max-w-md text-[15px] md:text-base lg:text-lg font-light leading-relaxed mb-8 md:mb-10 animate-fade-in-up delay-400">
+                {settings?.hero_subtitle || dict.home.heroSubtitle}
+              </p>
+
+              {/* CTA Buttons — improved hierarchy and mobile layout */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4 animate-fade-in-up delay-600">
+                {/* Primary CTA */}
+                <Link
+                  href={settings?.hero_cta_link || `/${locale}/work`}
+                  className="group inline-flex items-center gap-2.5 bg-gold-400 text-black px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase font-bold hover:bg-white transition-all duration-500 hover:shadow-[0_0_40px_rgba(212,175,55,0.35)] magnetic-btn w-full sm:w-auto justify-center sm:justify-start"
+                >
+                  {settings?.hero_cta_text || dict.home.exploreCta}
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform flex-shrink-0" aria-hidden="true" />
+                </Link>
+
+                {/* Secondary CTA — improved visibility with semi-transparent fill */}
+                <Link
+                  href={`/${locale}/about`}
+                  className="group inline-flex items-center gap-2.5 bg-white/[0.06] border border-white/20 px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase text-white/90 hover:bg-white/[0.12] hover:border-gold-400/40 hover:text-gold-400 transition-all duration-500 w-full sm:w-auto justify-center sm:justify-start"
+                >
+                  <Play className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
+                  {dict.home.watchShowreel}
+                </Link>
+              </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] font-heading font-bold uppercase leading-[0.85] tracking-[-0.02em] mb-6 md:mb-8 animate-fade-in-up delay-200">
-              {settings?.hero_title ? (
-                <>
-                  {settings.hero_title.split(' ').slice(0, 2).join(' ')}{' '}
-                  <br className="hidden sm:block" />
-                  <span className="gradient-text">{settings.hero_title.split(' ').slice(2, 4).join(' ')}</span>{' '}
-                  <br className="hidden sm:block" />
-                  <span className="text-white/80">{settings.hero_title.split(' ').slice(4).join(' ')}</span>
-                </>
-              ) : (
-                <>
-                  {dict.home.heroTitle.split(' ').slice(0, 2).join(' ')}{' '}
-                  <br className="hidden sm:block" />
-                  <span className="gradient-text">{dict.home.heroTitle.split(' ').slice(2, 4).join(' ')}</span>{' '}
-                  <br className="hidden sm:block" />
-                  <span className="text-white/80">{dict.home.heroTitle.split(' ').slice(4).join(' ')}</span>
-                </>
-              )}
-            </h1>
-
-            <p className="text-gray-400 max-w-lg text-base md:text-lg lg:text-xl font-light leading-relaxed mb-8 md:mb-12 animate-fade-in-up delay-400">
-              {settings?.hero_subtitle || dict.home.heroSubtitle}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3 md:gap-5 animate-fade-in-up delay-600">
-              <Link
-                href={settings?.hero_cta_link || `/${locale}/work`}
-                className="group inline-flex items-center gap-2 md:gap-3 bg-gold-400 text-black px-6 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.15em] md:tracking-[0.2em] uppercase font-bold hover:bg-white transition-all duration-500 hover:shadow-[0_0_40px_rgba(212,175,55,0.3)] magnetic-btn"
-              >
-                {settings?.hero_cta_text || dict.home.exploreCta}
-                <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </Link>
-              <Link
-                href={`/${locale}/about`}
-                className="group inline-flex items-center gap-2 md:gap-3 border border-white/15 px-6 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.15em] md:tracking-[0.2em] uppercase text-white/80 hover:border-gold-400/40 hover:text-gold-400 transition-all duration-500"
-              >
-                <Play className="w-3 h-3" aria-hidden="true" />
-                {dict.home.watchShowreel}
-              </Link>
+            {/* Right column: decorative visual element (desktop only) */}
+            <div className="hidden lg:flex items-center justify-center relative" aria-hidden="true">
+              <div className="relative w-72 xl:w-80 h-72 xl:h-80">
+                {/* Outer ring */}
+                <div className="absolute inset-0 rounded-full border border-gold-400/10 animate-[spin_30s_linear_infinite]" />
+                <div className="absolute inset-4 rounded-full border border-white/[0.04] animate-[spin_20s_linear_infinite_reverse]" />
+                {/* Center glow */}
+                <div className="absolute inset-8 rounded-full bg-gold-400/[0.04] blur-xl" />
+                {/* Stats floating around */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_years || '10+'}</p>
+                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_years_label || dict.home.yearsExperience}</p>
+                </div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-center">
+                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_projects || '120+'}</p>
+                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_projects_label || dict.home.projectsDelivered}</p>
+                </div>
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-center">
+                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_awards || '15+'}</p>
+                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_awards_label || dict.home.awardsWon}</p>
+                </div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 text-center">
+                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_clients || '50+'}</p>
+                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_clients_label || dict.home.happyClients}</p>
+                </div>
+                {/* Center MB monogram */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-4xl xl:text-5xl font-heading font-bold text-white/10 tracking-[0.2em]">MB</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 md:gap-3 animate-fade-in-up delay-800">
+        {/* Scroll indicator — improved with animated chevron */}
+        <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1.5 animate-fade-in-up delay-800">
           <span className="text-[9px] uppercase tracking-[0.3em] text-gray-500">{dict.home.scroll}</span>
-          <div className="w-[1px] h-6 md:h-8 bg-gradient-to-b from-gold-400/50 to-transparent animate-pulse" aria-hidden="true" />
+          <ChevronDown className="w-4 h-4 text-gold-400/60 animate-bounce" aria-hidden="true" />
         </div>
       </section>
 
-      {/* ── STATS ── */}
-      <section className="relative w-full py-12 md:py-16 overflow-hidden" aria-label="Statistics">
+      {/* ── STATS — mobile only (desktop shows in hero ring) ── */}
+      <section className="lg:hidden relative w-full py-10 overflow-hidden" aria-label="Statistics">
         <div className="absolute inset-0 bg-obsidian-800/50" aria-hidden="true" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
+        <div className="container mx-auto px-5 sm:px-6 relative z-10">
+          <div className="grid grid-cols-2 gap-6">
             {[
               { value: settings?.stat_years || '10+', label: settings?.stat_years_label || dict.home.yearsExperience },
               { value: settings?.stat_projects || '120+', label: settings?.stat_projects_label || dict.home.projectsDelivered },
@@ -141,10 +183,36 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               { value: settings?.stat_clients || '50+', label: settings?.stat_clients_label || dict.home.happyClients },
             ].map((stat, i) => (
               <div key={i} className="text-center group cursor-default">
-                <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold gradient-text mb-2 md:mb-3 group-hover:text-glow transition-all duration-500">
+                <p className="text-3xl sm:text-4xl font-heading font-bold gradient-text mb-2 group-hover:text-glow transition-all duration-500">
                   {stat.value}
                 </p>
-                <p className="text-[9px] md:text-[10px] text-gray-500 uppercase tracking-[0.2em] md:tracking-[0.25em] group-hover:text-gray-300 transition-colors duration-500">
+                <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em] group-hover:text-gray-300 transition-colors duration-500">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS — desktop only (full 4-col) ── */}
+      <section className="hidden lg:block relative w-full py-12 md:py-16 overflow-hidden" aria-label="Statistics">
+        <div className="absolute inset-0 bg-obsidian-800/50" aria-hidden="true" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-4 gap-4">
+            {[
+              { value: settings?.stat_years || '10+', label: settings?.stat_years_label || dict.home.yearsExperience },
+              { value: settings?.stat_projects || '120+', label: settings?.stat_projects_label || dict.home.projectsDelivered },
+              { value: settings?.stat_awards || '15+', label: settings?.stat_awards_label || dict.home.awardsWon },
+              { value: settings?.stat_clients || '50+', label: settings?.stat_clients_label || dict.home.happyClients },
+            ].map((stat, i) => (
+              <div key={i} className="text-center group cursor-default">
+                <p className="text-5xl lg:text-6xl font-heading font-bold gradient-text mb-3 group-hover:text-glow transition-all duration-500">
+                  {stat.value}
+                </p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-[0.25em] group-hover:text-gray-300 transition-colors duration-500">
                   {stat.label}
                 </p>
               </div>
@@ -156,7 +224,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* ── FEATURED PROJECTS ── */}
       <section className="py-20 md:py-32 relative overflow-hidden" aria-label="Featured projects">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-400/[0.02] rounded-full blur-[200px] pointer-events-none" aria-hidden="true" />
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        <div className="container mx-auto px-5 sm:px-6 md:px-12 relative z-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-16 gap-4 md:gap-6">
             <div>
               <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
@@ -204,6 +272,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     quality={80}
                   />
                 )}
+                {/* Placeholder when no cover image */}
+                {!project.cover_image && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-obsidian-700 to-obsidian-900 flex items-center justify-center">
+                    <span className="text-4xl font-heading font-bold text-white/10 uppercase tracking-widest">
+                      {project.title.charAt(0)}
+                    </span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-700 z-10" aria-hidden="true" />
                 <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 lg:p-8 z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-700">
                   <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
@@ -248,7 +324,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
         <div className="hidden md:block absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-400/[0.02] to-transparent blur-3xl" aria-hidden="true" />
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        <div className="container mx-auto px-5 sm:px-6 md:px-12 relative z-10">
           <div className={`grid grid-cols-1 gap-12 md:gap-20 ${services.length > 0 ? 'lg:grid-cols-2' : ''}`}>
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">

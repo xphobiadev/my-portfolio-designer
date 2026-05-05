@@ -10,15 +10,19 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
     const pathnameWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
 
     return (
-        <div className="flex items-center gap-0.5 md:gap-1" role="navigation" aria-label="Language switcher">
+        <div
+            className="flex items-center gap-0.5 bg-white/[0.04] border border-white/[0.06] rounded-full px-1 py-0.5"
+            role="navigation"
+            aria-label="Language switcher"
+        >
             {locales.map((loc) => (
                 <Link
                     key={loc}
                     href={`/${loc}${pathnameWithoutLocale}`}
-                    className={`px-2 md:px-2.5 py-1.5 text-[10px] uppercase tracking-[0.1em] font-medium rounded-full transition-all duration-300 touch-manipulation ${
+                    className={`px-2.5 py-1 text-[10px] uppercase tracking-[0.1em] font-semibold rounded-full transition-all duration-300 touch-manipulation ${
                         loc === locale
-                            ? 'bg-gold-400/15 text-gold-400 border border-gold-400/30'
-                            : 'text-gray-500 hover:text-white hover:bg-white/5 active:text-white active:bg-white/5 border border-transparent'
+                            ? 'bg-gold-400 text-black shadow-sm'
+                            : 'text-gray-400 hover:text-white hover:bg-white/[0.06] active:text-white border border-transparent'
                     }`}
                     title={localeNames[loc]}
                     aria-label={`Switch to ${localeNames[loc]}`}

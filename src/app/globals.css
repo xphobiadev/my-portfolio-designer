@@ -594,6 +594,16 @@ a.icon-only {
   -webkit-media-controls: none;
 }
 
+/* ── Hero fallback background — shown when no video/image is set ── */
+/* Creates a cinematic dark gradient with subtle gold vignette so the
+   hero never looks blank/broken even before media is uploaded. */
+.hero-fallback-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 70%, rgba(212, 175, 55, 0.03) 0%, transparent 60%),
+    linear-gradient(135deg, #050505 0%, #0a0a0a 40%, #080808 70%, #030303 100%);
+}
+
 /* Safe area padding for notched devices */
 @supports (padding: env(safe-area-inset-bottom)) {
   .pb-safe {
