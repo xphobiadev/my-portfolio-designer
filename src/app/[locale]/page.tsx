@@ -38,15 +38,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               quality={75}
             />
           )}
-          {/* Video only on md+ to save mobile bandwidth */}
+          {/* Background video — shown on all screen sizes */}
           <video
             autoPlay
             loop
             muted
             playsInline
             controls={false}
-            preload="none"
-            className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity"
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity"
             src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/portfolio_media/settings/hero_video.mp4`}
             aria-hidden="true"
           />
