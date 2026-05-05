@@ -1,44 +1,81 @@
 -- extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- create basic tables
+-- Categories table with proper UUID primary key
 CREATE TABLE IF NOT EXISTS categories (
-  name text PRIMARY KEY
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  name text UNIQUE NOT NULL,
+  slug text UNIQUE,
+  parent_id uuid REFERENCES categories(id) ON DELETE SET NULL,
+  created_at timestamp with time zone DEFAULT now()
 );
 
+-- Projects table
 CREATE TABLE IF NOT EXISTS projects (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   subtitle text,
-  category text REFERENCES categories(name),
+  category text NOT NULL,
   slug text UNIQUE NOT NULL,
   description text,
-  tags text[],
-  tools text[],
+  tags text[] DEFAULT '{}',
+  tools text[] DEFAULT '{}',
   problem text,
   solution text,
   result text,
   cover_image text,
-  gallery text[],
+  gallery text[] DEFAULT '{}',
   video_url text,
   audio_url text,
+  is_featured boolean DEFAULT false,
   created_at timestamp with time zone DEFAULT now()
 );
 
--- ensure core categories exist
-INSERT INTO categories (name) VALUES 
-('Design'), ('Photography'), ('Video'), ('Audio'), ('Branding')
+-- Site settings table
+CREATE TABLE IF NOT EXISTS site_settings (
+  id integer PRIMARY KEY DEFAULT 1,
+  site_title text DEFAULT 'Mohamed Bouliani',
+  site_description text DEFAULT 'Designer. Photographe. Vidéaste. Ingénieur Audio.',
+  hero_title text DEFAULT 'Je Crée Des Expériences Qui Racontent',
+  hero_subtitle text DEFAULT 'Designer. Photographe. Vidéaste. Ingénieur Audio. Création de marques puissantes et d''expériences immersives.',
+  hero_video_url text,
+  about_bio text,
+  about_image text,
+  contact_email text,
+  contact_phone text,
+  contact_instagram text,
+  contact_behance text,
+  contact_linkedin text,
+  footer_text text DEFAULT '© Mohamed Bouliani. Tous droits réservés.',
+  stat_years text DEFAULT '10+',
+  stat_projects text DEFAULT '120+',
+  stat_awards text DEFAULT '15+',
+  stat_clients text DEFAULT '50+',
+  updated_at timestamp with time zone DEFAULT now()
+);
+
+-- Contact messages table
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  name text NOT NULL,
+  email text NOT NULL,
+  message text NOT NULL,
+  is_read boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now()
+);
+
+-- Insert default settings row
+INSERT INTO site_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+-- Ensure core categories exist
+INSERT INTO categories (name, slug) VALUES 
+('Design', 'design'),
+('Photography', 'photography'),
+('Video Production', 'video-production'),
+('Audio Engineering', 'audio-engineering'),
+('Branding', 'branding'),
+('Motion Graphics', 'motion-graphics'),
+('Retouche & Manipulation Photo', 'retouche-manipulation-photo'),
+('Développement Web', 'developpement-web'),
+('AI Prompting Engineer', 'ai-prompting-engineer')
 ON CONFLICT (name) DO NOTHING;
-
--- clear old mock projects just in case
-DELETE FROM projects;
-
--- Insert Mock Data
-INSERT INTO projects (title, subtitle, category, slug, description, tags, tools, problem, solution, result, cover_image, gallery) VALUES
-('Noir Essence', 'Luxury Perfume Branding', 'Branding', 'noir-essence', 'A complete visual identity project for a luxury perfume brand, from concept to packaging design.', ARRAY['Branding', 'Packaging', 'Art Direction'], ARRAY['Illustrator', 'Photoshop', 'Figma', 'Cinema 4D'], 'The brand had no strong visual identity to stand out in a saturated market.', 'We created a premium identity with a timeless black & gold aesthetic.', 'The brand now has a strong recognition and premium positioning.', '/mock/noir-essence.jpg', ARRAY['/mock/noir-essence-2.jpg', '/mock/noir-essence-3.jpg']),
-
-('Casa Nights', 'Urban Photography Series', 'Photography', 'casa-nights', 'A cinematic photography exploration of Casablanca at night.', ARRAY['Photography', 'Color Grading'], ARRAY['Lightroom', 'Photoshop'], 'Capturing the raw, unfiltered essence of the city without losing aesthetic appeal.', 'Applied a custom film emulation LUT with heavy contrast and neon highlights.', 'Award-winning photo series featured in international magazines.', '/mock/casa-nights.jpg', ARRAY['/mock/casa-nights-2.jpg', '/mock/casa-nights-3.jpg']),
-
-('Atlas Experience', 'Event Aftermovie', 'Video', 'atlas-experience', 'High-energy cinematic aftermovie for the Atlas Music Festival.', ARRAY['Video Production', 'Editing', 'Color Grading'], ARRAY['Premiere Pro', 'DaVinci Resolve', 'After Effects'], 'Summarize a 3-day multi-stage event into a cohesive 2-minute film.', 'Focus on human emotion and dynamic transitions matching the audio beat.', 'Over 1M organic views and 40% increase in next years ticket presales.', '/mock/atlas-exp.jpg', ARRAY[]::text[]),
-
-('Echo Sphere', 'Sound Design & Music Production', 'Audio', 'echo-sphere', 'Immersive soundscape and foley design for a sci-fi short film.', ARRAY['Sound Design', 'Mixing', 'Mastering'], ARRAY['Ableton Live', 'Pro Tools'], 'The visual effects lacked weight and realism.', 'Layered organic sounds with synthesized sub-frequencies.', 'Winner of Best Sound Design at the Independent Short Film Awards.', '/mock/echo-sphere.jpg', ARRAY[]::text[]);
