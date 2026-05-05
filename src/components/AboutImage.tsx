@@ -32,7 +32,7 @@ export default function AboutImage({ src }: { src?: string | null }) {
     return (
         <Image
             src={src}
-            alt="Portrait of Mohamed Bouliani"
+            alt="Portrait photo of Mohamed Bouliani, designer and video editor"
             fill
             className="object-cover object-top"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"

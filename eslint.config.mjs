@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Node utility scripts — CommonJS, not subject to app ESLint rules
+    "scripts/**",
+    "add-categories.js",
+    "seed-projects.js",
   ]),
 ]);
 

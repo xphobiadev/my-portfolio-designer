@@ -24,7 +24,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       {/* ── HERO ── */}
-      <section className="hero-section relative w-full flex items-center overflow-hidden">
+      <section className="hero-section relative w-full flex items-center overflow-hidden" aria-label="Hero introduction">
         {/* Background layer */}
         <div className="absolute inset-0 z-0">
           {/* Background video — shown on all screen sizes */}
@@ -52,6 +52,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               priority
               sizes="100vw"
               quality={75}
+              aria-hidden="true"
             />
           )}
           {/* Cinematic fallback pattern when no media at all */}
@@ -139,19 +140,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {/* Stats floating around */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
                   <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_years || '10+'}</p>
-                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_years_label || dict.home.yearsExperience}</p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_years_label || dict.home.yearsExperience}</p>
                 </div>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-center">
                   <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_projects || '120+'}</p>
-                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_projects_label || dict.home.projectsDelivered}</p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_projects_label || dict.home.projectsDelivered}</p>
                 </div>
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-center">
                   <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_awards || '15+'}</p>
-                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_awards_label || dict.home.awardsWon}</p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_awards_label || dict.home.awardsWon}</p>
                 </div>
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 text-center">
                   <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_clients || '50+'}</p>
-                  <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em]">{settings?.stat_clients_label || dict.home.happyClients}</p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_clients_label || dict.home.happyClients}</p>
                 </div>
                 {/* Center MB monogram */}
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -164,7 +165,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         {/* Scroll indicator — improved with animated chevron */}
         <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1.5 animate-fade-in-up delay-800">
-          <span className="text-[9px] uppercase tracking-[0.3em] text-gray-500">{dict.home.scroll}</span>
+          <span className="text-[9px] uppercase tracking-[0.3em] text-gray-400">{dict.home.scroll}</span>
           <ChevronDown className="w-4 h-4 text-gold-400/60 animate-bounce" aria-hidden="true" />
         </div>
       </section>
@@ -186,7 +187,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <p className="text-3xl sm:text-4xl font-heading font-bold gradient-text mb-2 group-hover:text-glow transition-all duration-500">
                   {stat.value}
                 </p>
-                <p className="text-[9px] text-gray-500 uppercase tracking-[0.2em] group-hover:text-gray-300 transition-colors duration-500">
+                <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em] group-hover:text-gray-200 transition-colors duration-200">
                   {stat.label}
                 </p>
               </div>
@@ -212,7 +213,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <p className="text-5xl lg:text-6xl font-heading font-bold gradient-text mb-3 group-hover:text-glow transition-all duration-500">
                   {stat.value}
                 </p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-[0.25em] group-hover:text-gray-300 transition-colors duration-500">
+                <p className="text-[10px] text-gray-400 uppercase tracking-[0.25em] group-hover:text-gray-200 transition-colors duration-200">
                   {stat.label}
                 </p>
               </div>
@@ -261,7 +262,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {project.cover_image && (
                   <Image
                     src={project.cover_image}
-                    alt={project.title}
+                    alt={`${project.title}${project.subtitle ? ` - ${project.subtitle}` : ''}`}
                     fill
                     className="object-cover cinematic-image group-hover:scale-105 transition-transform duration-[1.2s] ease-out"
                     sizes={index === 0
@@ -311,8 +312,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
           {projects.length === 0 && (
             <div className="text-center py-16 md:py-24 glass rounded-3xl">
-              <p className="text-gray-500 text-sm uppercase tracking-widest">{dict.home.noProjects}</p>
-              <p className="text-gray-600 text-xs mt-2">{dict.home.addFromAdmin}</p>
+              <p className="text-gray-400 text-sm uppercase tracking-widest">{dict.home.noProjects}</p>
+              <p className="text-gray-400 text-xs mt-2">{dict.home.addFromAdmin}</p>
             </div>
           )}
         </div>
@@ -364,7 +365,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         <h3 className="text-sm md:text-base font-heading font-semibold tracking-wide text-white mb-1.5 md:mb-2 group-hover:text-gold-400 transition-colors duration-500">
                           {srv.title}
                         </h3>
-                        <p className="text-xs md:text-sm font-light text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors duration-500">
+                        <p className="text-xs md:text-sm font-light text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-200">
                           {srv.desc}
                         </p>
                       </div>

@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ local
                                 {project.cover_image && (
                                     <Image
                                         src={project.cover_image}
-                                        alt={project.title}
+                                        alt={`${project.title} - ${project.category} project`}
                                         fill
                                         className="object-cover cinematic-image group-hover:scale-105 transition-transform duration-[1.2s] ease-out"
                                         sizes={index === 0 && projects.length > 2

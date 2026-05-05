@@ -16,10 +16,46 @@
   --font-arabic: var(--font-cairo), 'Cairo', 'Noto Sans Arabic', system-ui, sans-serif;
 }
 
-:root {
+/* ── Dark theme (default) ── */
+:root,
+[data-theme="dark"] {
   --background: #030303;
   --foreground: #f0f0f0;
+  --card-bg: rgba(10, 10, 10, 0.6);
+  --card-border: rgba(255, 255, 255, 0.04);
+  --nav-bg-scrolled: rgba(0, 0, 0, 0.80);
+  --nav-bg-top: rgba(0, 0, 0, 0.60);
+  --text-muted: #9ca3af;
   --grain-opacity: 0.03;
+  color-scheme: dark;
+}
+
+/* ── Light theme variant ── */
+[data-theme="light"] {
+  --background: #f5f5f0;
+  --foreground: #1a1a2e;
+  --card-bg: rgba(255, 255, 255, 0.80);
+  --card-border: rgba(0, 0, 0, 0.06);
+  --nav-bg-scrolled: rgba(245, 245, 240, 0.92);
+  --nav-bg-top: rgba(245, 245, 240, 0.70);
+  --text-muted: #4b5563;
+  --grain-opacity: 0.015;
+  color-scheme: light;
+}
+
+/* ── System preference: light ── */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --background: #f5f5f0;
+    --foreground: #1a1a2e;
+    --card-bg: rgba(255, 255, 255, 0.80);
+    --card-border: rgba(0, 0, 0, 0.06);
+    --nav-bg-scrolled: rgba(245, 245, 240, 0.92);
+    --nav-bg-top: rgba(245, 245, 240, 0.70);
+    --text-muted: #4b5563;
+    --grain-opacity: 0.015;
+    color-scheme: light;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -49,6 +85,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Prevent long words from causing horizontal overflow */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
   /* Improve touch scrolling on iOS */
   -webkit-overflow-scrolling: touch;
   /* Prevent content from being hidden under notch */
@@ -251,27 +290,27 @@ html[dir="rtl"] body {
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: fade-in-up 0.3s ease-out forwards;
 }
 
 .animate-fade-in-down {
-  animation: fade-in-down 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: fade-in-down 0.25s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scale-in 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: scale-in 0.3s ease-out forwards;
 }
 
 .animate-slide-in-left {
-  animation: slide-in-left 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: slide-in-left 0.3s ease-out forwards;
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: slide-in-right 0.3s ease-out forwards;
 }
 
 .animate-cinematic-zoom {
-  animation: cinematic-zoom 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: cinematic-zoom 0.35s ease-out forwards;
 }
 
 .animate-float {
@@ -570,6 +609,27 @@ a.icon-only {
   }
 }
 
+/* ── Mobile overflow prevention at 375px ── */
+@media (max-width: 480px) {
+  /* Ensure containers never exceed viewport width */
+  .container {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Prevent any element from exceeding its parent */
+  img, video, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure text wraps properly in all sections */
+  h1, h2, h3, h4, h5, h6, p, span, a {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
+
 /* ── Hero section: use dynamic viewport height on mobile ── */
 /* Tailwind's min-h-screen uses 100vh which on iOS Safari includes the browser chrome.
    min-h-[100dvh] uses the dynamic viewport height (shrinks when the browser bar hides).
@@ -616,28 +676,104 @@ a.icon-only {
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
+  /* Disable all transitions and animations globally */
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  
+
+  /* Hide film grain overlay (pseudo-element animation) */
   body::before {
     display: none;
   }
 
+  /* Keep only essential UI state transitions — override the global rule above */
+  .theme-toggle,
+  .reading-progress {
+    transition: none !important;
+  }
+
+  /* Disable all custom animate-* classes */
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-scale-in,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-cinematic-zoom,
   .animate-float,
   .animate-morph,
   .animate-pulse-glow {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
+
+  /* Disable shimmer utility animation */
+  .shimmer {
+    animation: none !important;
+    background: none !important;
+  }
+
+  /*
+   * Framer Motion note:
+   * If Framer Motion is added in the future, use the useReducedMotion() hook
+   * (import { useReducedMotion } from 'framer-motion') in animated components
+   * to conditionally skip motion variants when the user prefers reduced motion.
+   */
 }
 
-/* Focus styles for accessibility */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FOCUS STYLES — WCAG 2.4.7 Keyboard Focus Visible
+   High-contrast focus ring for all interactive elements.
+   Uses :focus-visible so it only appears for keyboard navigation.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 :focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
-  outline-offset: 2px;
+  outline: 2px solid #d4af37;
+  outline-offset: 3px;
   border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
+}
+
+/* Links — ensure focus ring adapts to rounded shapes */
+a:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 3px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
+}
+
+/* Buttons — match their rounded shape */
+button:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 3px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
+}
+
+/* Rounded-full elements (pill buttons, nav links) */
+.rounded-full:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 3px;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
+}
+
+/* Form inputs */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+/* Remove default outline on regular focus (mouse click) */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════

@@ -1,8 +1,8 @@
 import { getSettings } from '@/lib/data';
-import { submitContactMessage } from '@/app/admin/actions';
 import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react';
 import { getDictionary } from '@/i18n/getDictionary';
 import type { Locale } from '@/i18n/config';
+import { ContactForm } from '@/components/ContactForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -110,76 +110,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                     {/* ── Right: Contact Form ── */}
                     <div className="relative">
                         <div className="absolute -inset-4 md:-inset-8 bg-gold-400/[0.02] rounded-[3rem] blur-3xl pointer-events-none" aria-hidden="true" />
-                        <form
-                            action={submitContactMessage}
-                            className="relative p-6 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl border border-white/[0.06] bg-obsidian-800/40 backdrop-blur-xl space-y-6 md:space-y-8"
-                        >
-                            <div className="mb-2 md:mb-4">
-                                <h2 className="text-lg md:text-xl font-heading font-bold uppercase tracking-wide text-white mb-1.5 md:mb-2">
-                                    {dict.contact.formTitle}
-                                </h2>
-                                <p className="text-xs text-gray-500 font-light">{dict.contact.formSubtitle}</p>
-                            </div>
-
-                            {/* Name */}
-                            <div className="relative group">
-                                <label className="text-[9px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 md:mb-2 block font-medium">
-                                    {dict.contact.yourName}
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    placeholder={dict.contact.namePlaceholder}
-                                    required
-                                    autoComplete="name"
-                                    className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 md:px-5 py-3.5 md:py-4 text-white text-sm focus:outline-none focus:border-gold-400/40 focus:bg-white/[0.05] transition-all duration-500 placeholder:text-gray-700"
-                                />
-                                <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gold-400/50 group-focus-within:w-full transition-all duration-700" aria-hidden="true" />
-                            </div>
-
-                            {/* Email */}
-                            <div className="relative group">
-                                <label className="text-[9px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 md:mb-2 block font-medium">
-                                    {dict.contact.yourEmail}
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder={dict.contact.emailPlaceholder}
-                                    required
-                                    autoComplete="email"
-                                    className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 md:px-5 py-3.5 md:py-4 text-white text-sm focus:outline-none focus:border-gold-400/40 focus:bg-white/[0.05] transition-all duration-500 placeholder:text-gray-700"
-                                />
-                                <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gold-400/50 group-focus-within:w-full transition-all duration-700" aria-hidden="true" />
-                            </div>
-
-                            {/* Message */}
-                            <div className="relative group">
-                                <label className="text-[9px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 md:mb-2 block font-medium">
-                                    {dict.contact.yourMessage}
-                                </label>
-                                <textarea
-                                    name="message"
-                                    placeholder={dict.contact.messagePlaceholder}
-                                    rows={5}
-                                    required
-                                    className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 md:px-5 py-3.5 md:py-4 text-white text-sm focus:outline-none focus:border-gold-400/40 focus:bg-white/[0.05] transition-all duration-500 resize-none placeholder:text-gray-700"
-                                />
-                                <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-gold-400/50 group-focus-within:w-full transition-all duration-700" aria-hidden="true" />
-                            </div>
-
-                            {/* Submit */}
-                            <button
-                                type="submit"
-                                className="w-full bg-gradient-to-r from-gold-400 to-gold-500 text-black font-heading tracking-[0.15em] md:tracking-[0.2em] font-bold uppercase py-4 md:py-5 rounded-xl hover:from-white hover:to-white transition-all duration-500 transform hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(212,175,55,0.2)] magnetic-btn text-xs md:text-sm"
-                            >
-                                {dict.contact.send}
-                            </button>
-
-                            <p className="text-[9px] text-gray-700 text-center uppercase tracking-wider">
-                                {dict.contact.privacy}
-                            </p>
-                        </form>
+                        <ContactForm dict={dict.contact} />
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/getDictionary";
 
@@ -13,16 +14,13 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    if (pathname.startsWith('/admin')) return null;
-
-    const navLinks = [
-        { name: dict.nav.work, path: `/${locale}/work` },
-        { name: dict.nav.photography, path: `/${locale}/photography` },
-        { name: dict.nav.videos, path: `/${locale}/videos` },
-        { name: dict.nav.audio, path: `/${locale}/audio` },
-        { name: dict.nav.about, path: `/${locale}/about` },
-        { name: dict.nav.contact, path: `/${locale}/contact` },
-    ];
+    // Determine if a nav link is active (supports sub-pages like /en/work/slug)
+    const isActive = (linkPath: string) => {
+        if (pathname === linkPath) return true;
+        // For sub-page matching (e.g. /en/work/slug should highlight "Work")
+        if (linkPath !== `/${locale}` && pathname.startsWith(linkPath + '/')) return true;
+        return false;
+    };
 
     // Passive scroll listener for better performance
     const handleScroll = useCallback(() => {
@@ -33,10 +31,6 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
-
-    useEffect(() => {
-        setMobileMenuOpen(false);
-    }, [pathname]);
 
     // Lock body scroll when mobile menu is open
     useEffect(() => {
@@ -49,6 +43,29 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             document.body.style.overflow = '';
         };
     }, [mobileMenuOpen]);
+
+    // Close mobile menu on Escape key
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && mobileMenuOpen) {
+                setMobileMenuOpen(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [mobileMenuOpen]);
+
+    // Must be after all hooks — mobile nav Links already call setMobileMenuOpen(false) via onClick
+    if (pathname.startsWith('/admin')) return null;
+
+    const navLinks = [
+        { name: dict.nav.work, path: `/${locale}/work` },
+        { name: dict.nav.photography, path: `/${locale}/photography` },
+        { name: dict.nav.videos, path: `/${locale}/videos` },
+        { name: dict.nav.audio, path: `/${locale}/audio` },
+        { name: dict.nav.about, path: `/${locale}/about` },
+        { name: dict.nav.contact, path: `/${locale}/contact` },
+    ];
 
     return (
         <>
@@ -78,17 +95,18 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                             <Link
                                 key={link.path}
                                 href={link.path}
-                                className={`relative px-3 xl:px-5 py-2.5 text-[12px] xl:text-[13px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-medium transition-all duration-500 rounded-full ${
-                                    pathname === link.path
+                                aria-current={isActive(link.path) ? "page" : undefined}
+                                className={`relative px-4 xl:px-5 py-3 min-h-[44px] inline-flex items-center text-[12px] xl:text-[13px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-medium transition-all duration-500 rounded-full ${
+                                    isActive(link.path)
                                         ? "text-gold-400 bg-gold-400/[0.08]"
-                                        : "text-gray-400 hover:text-white"
+                                        : "text-gray-300 hover:text-white"
                                 }`}
                             >
                                 {link.name}
-                                {pathname === link.path && (
+                                {isActive(link.path) && (
                                     <motion.span
                                         layoutId="nav-indicator"
-                                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-400"
+                                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] rounded-full bg-gold-400"
                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                     />
                                 )}
@@ -96,21 +114,22 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                         ))}
                     </nav>
 
-                    {/* CTA + Language Switcher + Mobile Toggle */}
+                    {/* CTA + Language Switcher + Theme Toggle + Mobile Toggle */}
                     <div className="flex items-center gap-2 md:gap-3">
+                        <ThemeToggle />
                         <LanguageSwitcher locale={locale} />
 
                         <Link
                             href={`/${locale}/contact`}
-                            className="hidden md:inline-flex items-center gap-2 px-4 xl:px-6 py-2.5 xl:py-3 text-[10px] xl:text-[11px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-bold border border-gold-400/30 text-gold-400 rounded-full hover:bg-gold-400 hover:text-black transition-all duration-500 magnetic-btn"
+                            className="hidden md:inline-flex items-center gap-2 px-6 xl:px-7 py-3 xl:py-3.5 text-[11px] xl:text-[12px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-bold bg-gold-400 text-black rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:brightness-110 transition-all duration-200 magnetic-btn"
                         >
                             {dict.nav.letsTalk}
-                            <ArrowUpRight className="w-3 h-3 xl:w-3.5 xl:h-3.5" aria-hidden="true" />
+                            <ArrowUpRight className="w-3.5 h-3.5 xl:w-4 xl:h-4" aria-hidden="true" />
                         </Link>
 
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="lg:hidden relative w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border border-white/10 hover:border-gold-400/30 transition-colors touch-manipulation"
+                            className="lg:hidden relative w-11 h-11 flex items-center justify-center rounded-full border border-white/10 hover:border-gold-400/30 transition-colors touch-manipulation"
                             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                             aria-expanded={mobileMenuOpen}
                             aria-controls="mobile-menu"
@@ -143,7 +162,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                         {/* Close button inside overlay */}
                         <button
                             onClick={() => setMobileMenuOpen(false)}
-                            className="absolute top-4 right-4 md:top-5 md:right-6 w-10 h-10 flex items-center justify-center rounded-full border border-white/10 hover:border-gold-400/30 transition-colors touch-manipulation"
+                            className="absolute top-4 right-4 md:top-5 md:right-6 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 hover:border-gold-400/30 transition-colors touch-manipulation"
                             aria-label="Close menu"
                         >
                             <X className="w-4 h-4 text-white" aria-hidden="true" />
@@ -169,9 +188,10 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                                     <Link
                                         href={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
+                                        aria-current={isActive(link.path) ? "page" : undefined}
                                         className={`block text-2xl sm:text-3xl font-heading font-bold uppercase tracking-wider py-3 px-8 transition-all duration-300 touch-manipulation ${
-                                            pathname === link.path
-                                                ? "text-gold-400 text-glow"
+                                            isActive(link.path)
+                                                ? "text-gold-400 text-glow border-b-2 border-gold-400"
                                                 : "text-white/60 hover:text-white active:text-gold-400"
                                         }`}
                                     >
@@ -215,7 +235,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                             className="absolute bottom-8 text-center"
                             style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
                         >
-                            <p className="text-[10px] text-gray-600 uppercase tracking-[0.3em]">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-[0.3em]">
                                 Mohamed Bouliani © {new Date().getFullYear()}
                             </p>
                         </motion.div>

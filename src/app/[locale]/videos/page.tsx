@@ -47,7 +47,7 @@ export default async function Videos({ params }: { params: Promise<{ locale: str
                                 {p.cover_image ? (
                                     <Image
                                         src={p.cover_image}
-                                        alt={p.title}
+                                        alt={`${p.title} - video project thumbnail`}
                                         fill
                                         className="object-cover"
                                         sizes="(max-width: 768px) 100vw, 50vw"

@@ -56,7 +56,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                                 {thumbnail ? (
                                     <Image
                                         src={thumbnail}
-                                        alt={category.name}
+                                        alt={`${category.name} - category cover image`}
                                         fill
                                         className="object-cover cinematic-image group-hover:scale-105 transition-transform duration-[1.2s] ease-out"
                                         sizes={index === 0

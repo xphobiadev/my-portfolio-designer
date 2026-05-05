@@ -3,6 +3,7 @@ import { Inter, Outfit, Cairo } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ReadingProgress } from "@/components/ReadingProgress";
 import { locales, localeDirection, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getSettings } from "@/lib/data";
@@ -81,6 +82,12 @@ export default async function LocaleLayout({
       className={`${inter.variable} ${outfit.variable} ${cairo.variable} h-full antialiased dark`}
     >
       <head>
+        {/* Anti-flash theme script — runs before first paint to apply stored/system theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
+          }}
+        />
         {/* DNS prefetch for Supabase */}
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
@@ -90,8 +97,9 @@ export default async function LocaleLayout({
         )}
       </head>
       <body className={`min-h-full flex flex-col bg-background text-foreground selection:bg-gold-400/20 selection:text-gold-300 ${dir === 'rtl' ? 'font-arabic' : 'font-sans'}`}>
+        <ReadingProgress />
         <Header locale={lang} dict={dict} />
-        <main className="flex-grow flex flex-col">{children}</main>
+        <main id="main-content" className="flex-grow flex flex-col" aria-label="Main content">{children}</main>
         <Footer locale={lang} dict={dict} settings={settings} />
       </body>
     </html>

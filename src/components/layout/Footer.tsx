@@ -26,7 +26,7 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
     ].filter((s): s is { name: string; url: string } => Boolean(s.url));
 
     return (
-        <footer className="relative w-full mt-auto overflow-hidden">
+        <footer className="relative w-full mt-auto overflow-hidden" role="contentinfo" aria-label="Site footer">
             {/* Top gradient line */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" aria-hidden="true" />
 
@@ -63,35 +63,35 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                             >
                                 MB
                             </Link>
-                            <p className="text-sm text-gray-500 mt-4 leading-relaxed font-light max-w-xs">
+                            <p className="text-sm text-gray-400 mt-4 leading-relaxed font-light max-w-xs">
                                 {dict.footer.description}
                             </p>
                         </div>
 
                         {/* Navigation */}
-                        <div>
-                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-5 md:mb-6">
+                        <nav aria-label="Footer navigation">
+                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-5 md:mb-6">
                                 {dict.footer.navigation}
                             </h3>
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                                 {footerLinks.map((link) => (
                                     <Link
                                         key={link.path}
                                         href={link.path}
-                                        className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider py-1"
+                                        className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider py-3 min-h-[44px] inline-flex items-center"
                                     >
                                         {link.name}
                                     </Link>
                                 ))}
                             </div>
-                        </div>
+                        </nav>
 
                         {/* Social */}
-                        <div>
-                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-5 md:mb-6">
+                        <nav aria-label="Social media links">
+                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-5 md:mb-6">
                                 {dict.footer.connect}
                             </h3>
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
                                 {socialLinks.length > 0 ? (
                                     socialLinks.map((social) => (
                                         <a
@@ -99,7 +99,7 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                                             href={social.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider inline-flex items-center gap-2 group py-1"
+                                            className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider inline-flex items-center gap-2 group py-3 min-h-[44px]"
                                         >
                                             {social.name}
                                             <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" aria-hidden="true" />
@@ -109,15 +109,15 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                                     <p className="text-xs text-gray-700 uppercase tracking-wider">Coming soon</p>
                                 )}
                             </div>
-                        </div>
+                        </nav>
                     </div>
 
                     {/* Bottom Bar */}
                     <div className="flex flex-col sm:flex-row justify-between items-center mt-10 md:mt-16 pt-6 md:pt-8 border-t border-white/[0.04] gap-3">
-                        <p className="text-[10px] text-gray-600 uppercase tracking-[0.2em] text-center sm:text-left">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em] text-center sm:text-left">
                             © {new Date().getFullYear()} Mohamed Bouliani. {dict.footer.rights}
                         </p>
-                        <p className="text-[10px] text-gray-700 uppercase tracking-[0.15em] text-center sm:text-right">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-[0.15em] text-center sm:text-right">
                             {dict.footer.crafted}
                         </p>
                     </div>

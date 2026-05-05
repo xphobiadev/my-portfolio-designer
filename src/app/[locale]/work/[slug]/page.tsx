@@ -49,7 +49,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ loca
                 <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-obsidian-800 mb-12 md:mb-20 overflow-hidden letterbox">
                     <Image
                         src={project.cover_image}
-                        alt={project.title}
+                        alt={`${project.title} - project cover image`}
                         fill
                         className="object-cover cinematic-image"
                         sizes="100vw"
@@ -168,7 +168,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ loca
                                     >
                                         <Image
                                             src={img}
-                                            alt={`${project.title} - Image ${i + 1}`}
+                                            alt={`${project.title} - gallery image ${i + 1}`}
                                             fill
                                             className="object-cover cinematic-image group-hover:scale-[1.03] transition-transform duration-[1.2s]"
                                             sizes={i === 0
