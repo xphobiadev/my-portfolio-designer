@@ -339,12 +339,24 @@ export async function updateHomeSettings(formData: FormData) {
     await supabase.storage.createBucket('portfolio_media', { public: true }).catch(() => { });
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const { error } = await supabase.storage.from('portfolio_media').upload('settings/hero_video.mp4', buffer, {
+    const { data, error } = await supabase.storage.from('portfolio_media').upload('settings/hero_video.mp4', buffer, {
         contentType: file.type,
         upsert: true
     });
 
-    if (error) console.error("Upload Error (updateHomeSettings):", error);
+    if (error) {
+        console.error("Upload Error (updateHomeSettings):", error);
+        return;
+    }
+
+    // Save the public URL to site_settings so the frontend can use it
+    const videoUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/portfolio_media/${data.path}`;
+    const { error: dbError } = await supabase
+        .from('site_settings')
+        .update({ hero_video_url: videoUrl })
+        .eq('id', 1);
+
+    if (dbError) console.error("DB Error saving hero_video_url:", dbError);
 
     revalidateAll();
 }

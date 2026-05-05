@@ -27,29 +27,33 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section className="relative w-full min-h-screen flex items-center overflow-hidden">
         {/* Background layer */}
         <div className="absolute inset-0 z-0">
-          {settings?.hero_image_url && (
+          {/* Background video — shown on all screen sizes */}
+          {settings?.hero_video_url && (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={false}
+              preload="metadata"
+              poster={settings.hero_image_url ?? undefined}
+              className="absolute inset-0 w-full h-full object-cover opacity-40"
+              src={settings.hero_video_url}
+              aria-hidden="true"
+            />
+          )}
+          {/* Fallback image when no video */}
+          {!settings?.hero_video_url && settings?.hero_image_url && (
             <Image
               src={settings.hero_image_url}
               alt=""
               fill
-              className="object-cover opacity-30 scale-105"
+              className="object-cover opacity-40 scale-105"
               priority
               sizes="100vw"
               quality={75}
             />
           )}
-          {/* Background video — shown on all screen sizes */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity"
-            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/portfolio_media/settings/hero_video.mp4`}
-            aria-hidden="true"
-          />
           {/* Gradients */}
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-10" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 z-10" aria-hidden="true" />

@@ -299,8 +299,26 @@ export default async function AdminHome() {
                 </div>
 
                 <p className="text-[10px] text-gray-500 leading-relaxed max-w-lg">
-                    Upload an MP4 or WebM video that loops silently in the hero background.
+                    Upload an MP4 or WebM video that loops silently in the hero background (shown on all devices including mobile).
                 </p>
+
+                {settings?.hero_video_url ? (
+                    <div className="p-3 rounded-xl border border-white/[0.04] bg-white/[0.01] space-y-2">
+                        <p className="text-[8px] text-gray-600 uppercase tracking-[0.2em] font-bold">Current Video:</p>
+                        <video
+                            src={settings.hero_video_url}
+                            muted
+                            playsInline
+                            controls
+                            className="w-full max-w-xs h-24 object-cover rounded-lg border border-white/[0.04]"
+                        />
+                        <p className="text-[8px] text-green-500/70 tracking-wide">✓ Video saved — visible on homepage</p>
+                    </div>
+                ) : (
+                    <div className="p-3 rounded-xl border border-amber-400/10 bg-amber-400/[0.03]">
+                        <p className="text-[9px] text-amber-400/70 tracking-wide">⚠ No video uploaded yet — hero background will be black on mobile</p>
+                    </div>
+                )}
 
                 <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.01]">
                     <input
