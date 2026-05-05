@@ -570,6 +570,30 @@ a.icon-only {
   }
 }
 
+/* ── Hero section: use dynamic viewport height on mobile ── */
+/* Tailwind's min-h-screen uses 100vh which on iOS Safari includes the browser chrome.
+   min-h-[100dvh] uses the dynamic viewport height (shrinks when the browser bar hides).
+   We add this as a CSS override so it works even in older Tailwind versions. */
+.hero-section {
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport height — supported in iOS 15.4+ / Chrome 108+ */
+}
+
+/* Ensure hero video fills its container correctly on all mobile browsers */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* GPU-accelerated compositing layer — prevents blank/black flash on iOS */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  /* Prevent iOS from showing native video controls overlay */
+  -webkit-media-controls: none;
+}
+
 /* Safe area padding for notched devices */
 @supports (padding: env(safe-area-inset-bottom)) {
   .pb-safe {

@@ -24,7 +24,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       {/* ── HERO ── */}
-      <section className="relative w-full min-h-screen flex items-center overflow-hidden">
+      <section className="hero-section relative w-full flex items-center overflow-hidden">
         {/* Background layer */}
         <div className="absolute inset-0 z-0">
           {/* Background video — shown on all screen sizes */}
@@ -35,9 +35,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               muted
               playsInline
               controls={false}
-              preload="metadata"
+              preload="none"
               poster={settings.hero_image_url ?? undefined}
-              className="absolute inset-0 w-full h-full object-cover opacity-40"
+              className="hero-video opacity-40"
               src={settings.hero_video_url}
               aria-hidden="true"
             />
