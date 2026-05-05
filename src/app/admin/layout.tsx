@@ -5,6 +5,9 @@ import type { Category } from '@/lib/types';
 import { AdminSidebar } from './components/AdminSidebar';
 import '../globals.css';
 
+// Force all admin routes to be dynamically rendered (they use connection() for DB access)
+export const dynamic = 'force-dynamic';
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
