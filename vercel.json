@@ -50,6 +50,6 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SITE_URL": "@next_public_site_url"
+    "NEXT_PUBLIC_SITE_URL": "https://portfolio-designer-and-video-editor.vercel.app"
   }
 }
