@@ -18,7 +18,7 @@ export default async function Photography({ params }: { params: Promise<{ locale
     );
 
     return (
-        <div className="pt-24 md:pt-32 pb-16 md:pb-24 container mx-auto px-4 sm:px-6 md:px-12">
+        <main role="main" className="pt-24 md:pt-32 pb-16 md:pb-24 container mx-auto px-4 sm:px-6 md:px-12">
             {/* Page header */}
             <div className="mb-8 md:mb-12">
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-heading font-bold uppercase mb-3 md:mb-4 tracking-tight text-white leading-[0.85]">
@@ -65,6 +65,6 @@ export default async function Photography({ params }: { params: Promise<{ locale
                     ))}
                 </div>
             )}
-        </div>
+        </main>
     );
 }

@@ -6,6 +6,9 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/getDictionary";
 import type { SiteSettings } from "@/lib/types";
 
+// Pages that are currently under development and should not be navigable
+const COMING_SOON_PATHS = ['/audio', '/videos'];
+
 export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dictionary; settings?: SiteSettings | null }) {
     const pathname = usePathname();
     if (pathname.startsWith('/admin')) return null;
@@ -24,6 +27,10 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
         { name: 'Behance', url: settings?.contact_behance },
         { name: 'LinkedIn', url: settings?.contact_linkedin },
     ].filter((s): s is { name: string; url: string } => Boolean(s.url));
+
+    const isComingSoon = (path: string) => {
+        return COMING_SOON_PATHS.some((p) => path.endsWith(p));
+    };
 
     return (
         <footer className="relative w-full mt-auto overflow-hidden" role="contentinfo" aria-label="Site footer">
@@ -74,15 +81,26 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                                 {dict.footer.navigation}
                             </h3>
                             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                {footerLinks.map((link) => (
-                                    <Link
-                                        key={link.path}
-                                        href={link.path}
-                                        className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider py-3 min-h-[44px] inline-flex items-center"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                ))}
+                                {footerLinks.map((link) =>
+                                    isComingSoon(link.path) ? (
+                                        <span
+                                            key={link.path}
+                                            aria-disabled="true"
+                                            className="text-xs text-gray-500 cursor-not-allowed uppercase tracking-wider py-3 min-h-[44px] inline-flex items-center gap-1"
+                                        >
+                                            {link.name}
+                                            <span className="text-[9px] text-gray-600 normal-case tracking-normal">({dict.footer.comingSoon})</span>
+                                        </span>
+                                    ) : (
+                                        <Link
+                                            key={link.path}
+                                            href={link.path}
+                                            className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider py-3 min-h-[44px] inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    )
+                                )}
                             </div>
                         </nav>
 
@@ -99,14 +117,16 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                                             href={social.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider inline-flex items-center gap-2 group py-3 min-h-[44px]"
+                                            className="text-xs text-gray-400 hover:text-gold-400 active:text-gold-400 transition-colors duration-300 uppercase tracking-wider inline-flex items-center gap-2 group py-3 min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
                                         >
                                             {social.name}
                                             <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" aria-hidden="true" />
                                         </a>
                                     ))
                                 ) : (
-                                    <p className="text-xs text-gray-700 uppercase tracking-wider">Coming soon</p>
+                                    <span aria-disabled="true" className="text-xs text-gray-500 cursor-not-allowed uppercase tracking-wider">
+                                        {dict.footer.comingSoon}
+                                    </span>
                                 )}
                             </div>
                         </nav>

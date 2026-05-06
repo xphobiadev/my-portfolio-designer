@@ -70,6 +70,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
     return (
         <>
             <header
+                role="banner"
                 className={`fixed top-0 w-full z-50 transition-all duration-700 ease-out ${
                     isScrolled
                         ? 'py-3 md:py-4 bg-black/80 backdrop-blur-xl border-b border-white/[0.06]'
@@ -96,7 +97,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                                 key={link.path}
                                 href={link.path}
                                 aria-current={isActive(link.path) ? "page" : undefined}
-                                className={`relative px-4 xl:px-5 py-3 min-h-[44px] inline-flex items-center text-[12px] xl:text-[13px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-medium transition-all duration-500 rounded-full ${
+                                className={`relative px-4 xl:px-5 py-3 min-h-[44px] inline-flex items-center text-[12px] xl:text-[13px] uppercase tracking-[0.15em] xl:tracking-[0.18em] font-medium transition-all duration-500 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                                     isActive(link.path)
                                         ? "text-gold-400 bg-gold-400/[0.08]"
                                         : "text-gray-300 hover:text-white"
@@ -189,7 +190,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                                         href={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
                                         aria-current={isActive(link.path) ? "page" : undefined}
-                                        className={`block text-2xl sm:text-3xl font-heading font-bold uppercase tracking-wider py-3 px-8 transition-all duration-300 touch-manipulation ${
+                                        className={`block text-2xl sm:text-3xl font-heading font-bold uppercase tracking-wider py-3 px-8 min-h-[44px] inline-flex items-center justify-center w-full transition-all duration-300 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-lg ${
                                             isActive(link.path)
                                                 ? "text-gold-400 text-glow border-b-2 border-gold-400"
                                                 : "text-white/60 hover:text-white active:text-gold-400"
@@ -221,7 +222,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                             <Link
                                 href={`/${locale}/contact`}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.18em] font-bold border border-gold-400/30 text-gold-400 rounded-full hover:bg-gold-400 hover:text-black transition-all duration-500 touch-manipulation"
+                                className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] min-w-[44px] text-[11px] uppercase tracking-[0.18em] font-bold border border-gold-400/30 text-gold-400 rounded-full hover:bg-gold-400 hover:text-black transition-all duration-300 touch-manipulation"
                             >
                                 {dict.nav.letsTalk}
                                 <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />

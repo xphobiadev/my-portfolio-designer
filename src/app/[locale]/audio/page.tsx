@@ -20,7 +20,9 @@ export default async function Audio({ params }: { params: Promise<{ locale: stri
                     {dict.nav.audio}
                 </h1>
                 <p className="text-gray-500 text-xs uppercase tracking-[0.3em]">
-                    {projects.length > 0 ? `${projects.length} ${projects.length === 1 ? 'track' : 'tracks'}` : ''}
+                    {projects.length > 0
+                        ? `${projects.length} ${projects.length === 1 ? 'track' : 'tracks'}`
+                        : dict.audio.subtitle}
                 </p>
             </div>
 
@@ -51,9 +53,14 @@ export default async function Audio({ params }: { params: Promise<{ locale: stri
                     <div className="absolute left-0 top-0 bottom-0 w-px bg-white/5" aria-hidden="true" />
 
                     {projects.length === 0 && (
-                        <p className="text-gray-500 text-xs uppercase tracking-widest text-center py-8">
-                            {dict.work.noProjectsInCategory}
-                        </p>
+                        <div className="text-center py-8 px-4">
+                            <p className="text-gray-500 text-xs uppercase tracking-widest mb-3">
+                                {dict.audio.comingSoon}
+                            </p>
+                            <p className="text-gray-400 text-sm font-light leading-relaxed">
+                                {dict.audio.noProjects}
+                            </p>
+                        </div>
                     )}
 
                     {projects.map((p: Project, i: number) => (

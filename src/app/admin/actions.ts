@@ -457,12 +457,12 @@ export async function updateProjectCover(formData: FormData) {
 
 // ─── Contact Messages ────────────────────────────────────────────────────────
 
-export async function submitContactMessage(formData: FormData) {
+export async function submitContactMessage(formData: FormData): Promise<{ success: boolean }> {
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    if (!name || !email || !message) return;
+    if (!name || !email || !message) return { success: false };
 
     const supabase = getSupabaseAdmin();
     const { error } = await supabase.from('contact_messages').insert([{
@@ -471,9 +471,13 @@ export async function submitContactMessage(formData: FormData) {
         message
     }]);
 
-    if (error) console.error("Submit contact message error:", error);
+    if (error) {
+        console.error("Submit contact message error:", error);
+        return { success: false };
+    }
 
     revalidateAll();
+    return { success: true };
 }
 
 export async function markMessageRead(formData: FormData) {

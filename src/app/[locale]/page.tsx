@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Play, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowRight, Play, ArrowUpRight, ChevronDown, BookOpen, Camera, Film, Music, Code, Calendar, Palette } from "lucide-react";
 import { getFeaturedProjects, getSettings } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { getDictionary } from "@/i18n/getDictionary";
@@ -14,20 +14,44 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const projects = await getFeaturedProjects();
   const settings = await getSettings();
 
-  const services = [
-    { title: settings?.service_1_title || "", desc: settings?.service_1_description || "", icon: "◆" },
-    { title: settings?.service_2_title || "", desc: settings?.service_2_description || "", icon: "▲" },
-    { title: settings?.service_3_title || "", desc: settings?.service_3_description || "", icon: "●" },
-    { title: settings?.service_4_title || "", desc: settings?.service_4_description || "", icon: "◇" }
-  ].filter(s => s.title);
+  const chapters = [
+    { title: dict.home.chapter1Title, subtitle: dict.home.chapter1Subtitle, text: dict.home.chapter1Text },
+    { title: dict.home.chapter2Title, subtitle: dict.home.chapter2Subtitle, text: dict.home.chapter2Text },
+    { title: dict.home.chapter3Title, subtitle: dict.home.chapter3Subtitle, text: dict.home.chapter3Text },
+    { title: dict.home.chapter4Title, subtitle: dict.home.chapter4Subtitle, text: dict.home.chapter4Text },
+    { title: dict.home.chapter5Title, subtitle: dict.home.chapter5Subtitle, text: dict.home.chapter5Text },
+    { title: dict.home.chapter6Title, subtitle: dict.home.chapter6Subtitle, text: dict.home.chapter6Text },
+  ];
+
+  const skills = [
+    { title: dict.home.skillsDesign, desc: dict.home.skillsDesignDesc, icon: "palette" },
+    { title: dict.home.skillsPhoto, desc: dict.home.skillsPhotoDesc, icon: "camera" },
+    { title: dict.home.skillsVideo, desc: dict.home.skillsVideoDesc, icon: "film" },
+    { title: dict.home.skillsAudio, desc: dict.home.skillsAudioDesc, icon: "music" },
+    { title: dict.home.skillsDev, desc: dict.home.skillsDevDesc, icon: "code" },
+    { title: dict.home.skillsEvents, desc: dict.home.skillsEventsDesc, icon: "calendar" },
+    { title: dict.home.skillsDecor, desc: dict.home.skillsDecorDesc, icon: "palette2" },
+  ];
+
+  const getSkillIcon = (icon: string) => {
+    switch (icon) {
+      case "palette": return <Palette className="w-5 h-5" />;
+      case "camera": return <Camera className="w-5 h-5" />;
+      case "film": return <Film className="w-5 h-5" />;
+      case "music": return <Music className="w-5 h-5" />;
+      case "code": return <Code className="w-5 h-5" />;
+      case "calendar": return <Calendar className="w-5 h-5" />;
+      case "palette2": return <Palette className="w-5 h-5" />;
+      default: return <Palette className="w-5 h-5" />;
+    }
+  };
 
   return (
     <>
-      {/* ── HERO ── */}
+      {/* ── HERO — PROLOGUE ── */}
       <section className="hero-section relative w-full flex items-center overflow-hidden" aria-label="Hero introduction">
         {/* Background layer */}
         <div className="absolute inset-0 z-0">
-          {/* Background video — shown on all screen sizes */}
           {settings?.hero_video_url && (
             <video
               autoPlay
@@ -42,7 +66,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               aria-hidden="true"
             />
           )}
-          {/* Fallback image when no video */}
           {!settings?.hero_video_url && settings?.hero_image_url && (
             <Image
               src={settings.hero_image_url}
@@ -55,169 +78,229 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               aria-hidden="true"
             />
           )}
-          {/* Cinematic fallback pattern when no media at all */}
           {!settings?.hero_video_url && !settings?.hero_image_url && (
             <div className="absolute inset-0 hero-fallback-bg" aria-hidden="true" />
           )}
-          {/* Gradients */}
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/30 z-10" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/50 z-10" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background z-10" aria-hidden="true" />
-          {/* Ambient glows — hidden on mobile for perf */}
           <div className="hidden md:block absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-gold-400/[0.05] blur-[150px] rounded-full z-10 animate-pulse-glow" aria-hidden="true" />
           <div className="hidden md:block absolute bottom-1/4 right-1/3 w-[300px] h-[300px] bg-gold-400/[0.03] blur-[100px] rounded-full z-10 animate-float" aria-hidden="true" />
-          {/* Scan line — desktop only */}
-          <div className="hidden md:block absolute inset-0 z-20 pointer-events-none opacity-[0.02]" aria-hidden="true">
-            <div className="w-full h-[2px] bg-white/50 animate-[scan-line_8s_linear_infinite]" />
-          </div>
         </div>
 
-        {/* Hero Content — vertically centered with proper top offset for fixed header */}
+        {/* Hero Content */}
         <div className="container mx-auto px-5 sm:px-8 md:px-12 z-30 pt-20 md:pt-24 pb-24 md:pb-32 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left column: text content */}
-            <div className="max-w-2xl">
-              {/* Eyebrow label — improved readability */}
-              <div className="flex items-center gap-3 mb-5 md:mb-7 animate-fade-in-up">
-                <span className="w-8 md:w-10 h-[1px] bg-gold-400/70" aria-hidden="true" />
-                <span className="text-gold-400 text-[11px] md:text-[12px] tracking-[0.25em] md:tracking-[0.3em] uppercase font-semibold">
-                  {settings?.site_title || dict.home.heroEyebrow}
-                </span>
-              </div>
-
-              {/* Main heading — controlled line breaks */}
-              <h1 className="text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[5rem] xl:text-[5.5rem] font-heading font-bold uppercase leading-[0.88] tracking-[-0.02em] mb-5 md:mb-7 animate-fade-in-up delay-200">
-                {settings?.hero_title ? (
-                  <>
-                    <span className="block">{settings.hero_title.split(' ').slice(0, 2).join(' ')}</span>
-                    <span className="block gradient-text">{settings.hero_title.split(' ').slice(2, 4).join(' ')}</span>
-                    <span className="block text-white/80">{settings.hero_title.split(' ').slice(4).join(' ')}</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="block">{dict.home.heroTitle.split(' ').slice(0, 2).join(' ')}</span>
-                    <span className="block gradient-text">{dict.home.heroTitle.split(' ').slice(2, 4).join(' ')}</span>
-                    <span className="block text-white/80">{dict.home.heroTitle.split(' ').slice(4).join(' ')}</span>
-                  </>
-                )}
-              </h1>
-
-              {/* Subtitle — improved size ratio */}
-              <p className="text-gray-300 max-w-md text-[15px] md:text-base lg:text-lg font-light leading-relaxed mb-8 md:mb-10 animate-fade-in-up delay-400">
-                {settings?.hero_subtitle || dict.home.heroSubtitle}
-              </p>
-
-              {/* CTA Buttons — improved hierarchy and mobile layout */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4 animate-fade-in-up delay-600">
-                {/* Primary CTA */}
-                <Link
-                  href={settings?.hero_cta_link || `/${locale}/work`}
-                  className="group inline-flex items-center gap-2.5 bg-gold-400 text-black px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase font-bold hover:bg-white transition-all duration-500 hover:shadow-[0_0_40px_rgba(212,175,55,0.35)] magnetic-btn w-full sm:w-auto justify-center sm:justify-start"
-                >
-                  {settings?.hero_cta_text || dict.home.exploreCta}
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform flex-shrink-0" aria-hidden="true" />
-                </Link>
-
-                {/* Secondary CTA — improved visibility with semi-transparent fill */}
-                <Link
-                  href={`/${locale}/about`}
-                  className="group inline-flex items-center gap-2.5 bg-white/[0.06] border border-white/20 px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase text-white/90 hover:bg-white/[0.12] hover:border-gold-400/40 hover:text-gold-400 transition-all duration-500 w-full sm:w-auto justify-center sm:justify-start"
-                >
-                  <Play className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
-                  {dict.home.watchShowreel}
-                </Link>
-              </div>
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Prologue badge */}
+            <div className="flex justify-center mb-6 animate-fade-in-up">
+              <span className="prologue-badge">
+                <BookOpen className="w-3 h-3" />
+                {settings?.site_title || dict.home.heroEyebrow}
+              </span>
             </div>
 
-            {/* Right column: decorative visual element (desktop only) */}
-            <div className="hidden lg:flex items-center justify-center relative" aria-hidden="true">
-              <div className="relative w-72 xl:w-80 h-72 xl:h-80">
-                {/* Outer ring */}
-                <div className="absolute inset-0 rounded-full border border-gold-400/10 animate-[spin_30s_linear_infinite]" />
-                <div className="absolute inset-4 rounded-full border border-white/[0.04] animate-[spin_20s_linear_infinite_reverse]" />
-                {/* Center glow */}
-                <div className="absolute inset-8 rounded-full bg-gold-400/[0.04] blur-xl" />
-                {/* Stats floating around */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_years || '10+'}</p>
-                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_years_label || dict.home.yearsExperience}</p>
+            {/* Main heading */}
+            <h1 className="text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[5rem] xl:text-[5.5rem] font-heading font-bold uppercase leading-[0.88] tracking-[-0.02em] mb-6 md:mb-8 animate-fade-in-up delay-200">
+              {settings?.hero_title ? (
+                <>
+                  <span className="block">{settings.hero_title.split(' ').slice(0, 2).join(' ')}</span>
+                  <span className="block gradient-text">{settings.hero_title.split(' ').slice(2, 4).join(' ')}</span>
+                  <span className="block text-white/80">{settings.hero_title.split(' ').slice(4).join(' ')}</span>
+                </>
+              ) : (
+                <>
+                  <span className="block gradient-text">{dict.home.heroTitle}</span>
+                </>
+              )}
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-gray-300 max-w-xl mx-auto text-[15px] md:text-base lg:text-lg font-light leading-relaxed mb-8 md:mb-10 animate-fade-in-up delay-400">
+              {settings?.hero_subtitle || dict.home.heroSubtitle}
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 animate-fade-in-up delay-600">
+              <Link
+                href={settings?.hero_cta_link || `/${locale}/about`}
+                className="group inline-flex items-center gap-2.5 bg-gold-400 text-black px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase font-bold hover:bg-white transition-all duration-300 hover:shadow-[0_0_40px_rgba(212,175,55,0.35)] magnetic-btn min-h-[44px]"
+              >
+                {settings?.hero_cta_text || dict.home.exploreCta}
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform flex-shrink-0" aria-hidden="true" />
+              </Link>
+              <Link
+                href={`/${locale}/work`}
+                className="group inline-flex items-center gap-2.5 bg-white/[0.06] border border-white/20 px-7 md:px-8 py-3.5 md:py-4 rounded-full text-[11px] tracking-[0.18em] md:tracking-[0.2em] uppercase text-white/90 hover:bg-white/[0.12] hover:border-gold-400/40 hover:text-gold-400 transition-all duration-300 min-h-[44px]"
+              >
+                <Play className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
+                {dict.home.watchShowreel}
+              </Link>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 md:mt-20 animate-fade-in-up delay-800">
+              {[
+                { value: settings?.stat_years || '20+', label: settings?.stat_years_label || dict.home.yearsExperience },
+                { value: settings?.stat_projects || '120+', label: settings?.stat_projects_label || dict.home.projectsDelivered },
+                { value: settings?.stat_awards || '30+', label: settings?.stat_awards_label || dict.home.awardsWon },
+                { value: settings?.stat_clients || '50+', label: settings?.stat_clients_label || dict.home.happyClients },
+              ].map((stat, i) => (
+                <div key={i} className="text-center group cursor-default">
+                  <p className="text-3xl md:text-4xl font-heading font-bold gradient-text mb-1.5 group-hover:text-glow transition-all duration-500">
+                    {stat.value}
+                  </p>
+                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em] group-hover:text-gray-200 transition-colors duration-200">
+                    {stat.label}
+                  </p>
                 </div>
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-center">
-                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_projects || '120+'}</p>
-                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_projects_label || dict.home.projectsDelivered}</p>
-                </div>
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-center">
-                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_awards || '15+'}</p>
-                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_awards_label || dict.home.awardsWon}</p>
-                </div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 text-center">
-                  <p className="text-2xl font-heading font-bold gradient-text">{settings?.stat_clients || '50+'}</p>
-                  <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em]">{settings?.stat_clients_label || dict.home.happyClients}</p>
-                </div>
-                {/* Center MB monogram */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-4xl xl:text-5xl font-heading font-bold text-white/10 tracking-[0.2em]">MB</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Scroll indicator — improved with animated chevron */}
+        {/* Scroll indicator */}
         <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1.5 animate-fade-in-up delay-800">
           <span className="text-[9px] uppercase tracking-[0.3em] text-gray-400">{dict.home.scroll}</span>
           <ChevronDown className="w-4 h-4 text-gold-400/60 animate-bounce" aria-hidden="true" />
         </div>
       </section>
 
-      {/* ── STATS — mobile only (desktop shows in hero ring) ── */}
-      <section className="lg:hidden relative w-full py-10 overflow-hidden" aria-label="Statistics">
-        <div className="absolute inset-0 bg-obsidian-800/50" aria-hidden="true" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
-        <div className="container mx-auto px-5 sm:px-6 relative z-10">
-          <div className="grid grid-cols-2 gap-6">
-            {[
-              { value: settings?.stat_years || '10+', label: settings?.stat_years_label || dict.home.yearsExperience },
-              { value: settings?.stat_projects || '120+', label: settings?.stat_projects_label || dict.home.projectsDelivered },
-              { value: settings?.stat_awards || '15+', label: settings?.stat_awards_label || dict.home.awardsWon },
-              { value: settings?.stat_clients || '50+', label: settings?.stat_clients_label || dict.home.happyClients },
-            ].map((stat, i) => (
-              <div key={i} className="text-center group cursor-default">
-                <p className="text-3xl sm:text-4xl font-heading font-bold gradient-text mb-2 group-hover:text-glow transition-all duration-500">
-                  {stat.value}
-                </p>
-                <p className="text-[9px] text-gray-400 uppercase tracking-[0.2em] group-hover:text-gray-200 transition-colors duration-200">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+      {/* ── STORY CHAPTERS ── */}
+      <section className="py-20 md:py-32 relative overflow-hidden" aria-label="My Story">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-400/[0.02] rounded-full blur-[200px] pointer-events-none" aria-hidden="true" />
+        
+        <div className="container mx-auto px-5 sm:px-6 md:px-12 relative z-10">
+          {/* Section header */}
+          <div className="text-center mb-16 md:mb-24">
+            <div className="flex items-center justify-center gap-3 md:gap-4 mb-4">
+              <span className="w-8 md:w-12 h-[1px] bg-gold-400/40" aria-hidden="true" />
+              <span className="text-[10px] tracking-[0.3em] md:tracking-[0.4em] text-gold-400 uppercase font-medium">
+                {dict.about.journey}
+              </span>
+              <span className="w-8 md:w-12 h-[1px] bg-gold-400/40" aria-hidden="true" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold uppercase tracking-tight text-white">
+              {dict.about.myPath}
+            </h2>
+          </div>
+
+          {/* Timeline */}
+          <div className="relative max-w-4xl mx-auto">
+            {/* Vertical connector line */}
+            <div className="hidden md:block story-timeline-connector timeline-line" aria-hidden="true" />
+
+            {/* Chapters */}
+            <div className="space-y-12 md:space-y-16">
+              {chapters.map((chapter, index) => (
+                <div
+                  key={index}
+                  className={`story-chapter relative flex flex-col md:flex-row items-start gap-6 md:gap-12 ${
+                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  }`}
+                >
+                  {/* Timeline dot (desktop) */}
+                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-8 items-center justify-center">
+                    <div className="story-timeline-dot" />
+                  </div>
+
+                  {/* Chapter content */}
+                  <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right md:pr-16' : 'md:text-left md:pl-16'}`}>
+                    <div className="story-card">
+                      {/* Chapter number */}
+                      <div className={`flex items-center gap-3 mb-3 ${index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
+                        <span className="chapter-number text-4xl md:text-5xl font-heading font-bold text-gold-400/20">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                      </div>
+                      
+                      {/* Chapter title */}
+                      <h3 className="text-lg md:text-xl font-heading font-semibold text-white mb-1">
+                        {chapter.title}
+                      </h3>
+                      
+                      {/* Chapter subtitle (year) */}
+                      <p className="text-sm text-gold-400 mb-3 tracking-wide">
+                        {chapter.subtitle}
+                      </p>
+                      
+                      {/* Chapter text */}
+                      <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed">
+                        {chapter.text}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Spacer for alternating layout */}
+                  <div className="hidden md:block flex-1" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS — desktop only (full 4-col) ── */}
-      <section className="hidden lg:block relative w-full py-12 md:py-16 overflow-hidden" aria-label="Statistics">
-        <div className="absolute inset-0 bg-obsidian-800/50" aria-hidden="true" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/10 to-transparent" aria-hidden="true" />
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { value: settings?.stat_years || '10+', label: settings?.stat_years_label || dict.home.yearsExperience },
-              { value: settings?.stat_projects || '120+', label: settings?.stat_projects_label || dict.home.projectsDelivered },
-              { value: settings?.stat_awards || '15+', label: settings?.stat_awards_label || dict.home.awardsWon },
-              { value: settings?.stat_clients || '50+', label: settings?.stat_clients_label || dict.home.happyClients },
-            ].map((stat, i) => (
-              <div key={i} className="text-center group cursor-default">
-                <p className="text-5xl lg:text-6xl font-heading font-bold gradient-text mb-3 group-hover:text-glow transition-all duration-500">
-                  {stat.value}
-                </p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-[0.25em] group-hover:text-gray-200 transition-colors duration-200">
-                  {stat.label}
-                </p>
+      {/* ── SKILLS SHOWCASE ── */}
+      <section className="py-20 md:py-32 relative overflow-hidden" aria-label="Skills">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-obsidian-800/30 to-transparent" aria-hidden="true" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
+        
+        <div className="container mx-auto px-5 sm:px-6 md:px-12 relative z-10">
+          {/* Section header */}
+          <div className="text-center mb-12 md:mb-16">
+            <div className="flex items-center justify-center gap-3 md:gap-4 mb-4">
+              <span className="w-8 md:w-12 h-[1px] bg-gold-400/40" aria-hidden="true" />
+              <span className="text-[10px] tracking-[0.3em] md:tracking-[0.4em] text-gold-400 uppercase font-medium">
+                {dict.home.expertise}
+              </span>
+              <span className="w-8 md:w-12 h-[1px] bg-gold-400/40" aria-hidden="true" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold uppercase tracking-tight text-white mb-4">
+              {dict.home.multidisciplinary}
+            </h2>
+            <p className="text-gray-400 text-base md:text-lg font-light max-w-2xl mx-auto leading-relaxed">
+              {dict.home.servicesDesc}
+            </p>
+          </div>
+
+          {/* Skills grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+            {skills.map((skill, i) => (
+              <div
+                key={i}
+                className="skill-card group relative p-5 md:p-6 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-white/[0.03] hover:border-gold-400/20 transition-all duration-700 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-400/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" aria-hidden="true" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-gold-400/60 group-hover:text-gold-400 transition-colors duration-500">
+                      {getSkillIcon(skill.icon)}
+                    </span>
+                    <h3 className="text-sm md:text-base font-heading font-semibold text-white group-hover:text-gold-400 transition-colors duration-500">
+                      {skill.title}
+                    </h3>
+                  </div>
+                  <p className="text-xs md:text-sm text-gray-500 font-light leading-relaxed group-hover:text-gray-400 transition-colors duration-500">
+                    {skill.desc}
+                  </p>
+                </div>
+                <span className="absolute top-3 right-3 text-[10px] text-gray-800 font-heading font-bold group-hover:text-gold-400/20 transition-colors duration-500" aria-hidden="true">
+                  0{i + 1}
+                </span>
               </div>
             ))}
+          </div>
+
+          {/* Learn more link */}
+          <div className="flex justify-center mt-10 md:mt-14">
+            <Link
+              href={`/${locale}/about`}
+              className="group inline-flex items-center gap-2 md:gap-3 text-[11px] tracking-[0.2em] uppercase text-white hover:text-gold-400 transition-all duration-500"
+            >
+              <span className="w-6 md:w-8 h-[1px] bg-gold-400/40 group-hover:w-10 md:group-hover:w-12 transition-all duration-500" aria-hidden="true" />
+              {dict.home.learnMore}
+              <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </section>
@@ -247,16 +330,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </Link>
           </div>
 
-          {/* Responsive project grid */}
+          {/* Project grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {projects.slice(0, 6).map((project: Project, index: number) => (
               <Link
                 href={`/${locale}/work/${project.slug}`}
                 key={project.id}
                 className={`group block relative rounded-2xl overflow-hidden card-cinematic bg-obsidian-800 ${
-                  index === 0
-                    ? 'sm:col-span-2 aspect-[16/10]'
-                    : 'aspect-[4/3]'
+                  index === 0 ? 'sm:col-span-2 aspect-[16/10]' : 'aspect-[4/3]'
                 }`}
               >
                 {project.cover_image && (
@@ -273,7 +354,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     quality={80}
                   />
                 )}
-                {/* Placeholder when no cover image */}
                 {!project.cover_image && (
                   <div className="absolute inset-0 bg-gradient-to-br from-obsidian-700 to-obsidian-900 flex items-center justify-center">
                     <span className="text-4xl font-heading font-bold text-white/10 uppercase tracking-widest">
@@ -319,75 +399,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      {/* ── SERVICES ── */}
-      <section className="py-20 md:py-32 relative overflow-hidden" aria-label="Services">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-obsidian-800/30 to-transparent" aria-hidden="true" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" aria-hidden="true" />
-        <div className="hidden md:block absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-400/[0.02] to-transparent blur-3xl" aria-hidden="true" />
-        <div className="container mx-auto px-5 sm:px-6 md:px-12 relative z-10">
-          <div className={`grid grid-cols-1 gap-12 md:gap-20 ${services.length > 0 ? 'lg:grid-cols-2' : ''}`}>
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
-                <span className="w-6 md:w-8 h-[1px] bg-gold-400/60" aria-hidden="true" />
-                <span className="text-[10px] tracking-[0.3em] md:tracking-[0.4em] text-gold-400 uppercase font-medium">
-                  {settings?.services_section_title || dict.home.expertise}
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold uppercase leading-[0.9] tracking-tight mb-6 md:mb-8 text-white">
-                {settings?.services_section_subtitle || dict.home.multidisciplinary}
-              </h2>
-              <p className="text-gray-400 text-base md:text-lg leading-relaxed font-light mb-8 md:mb-10 max-w-lg">
-                {settings?.services_section_description || dict.home.servicesDesc}
-              </p>
-              <Link
-                href={settings?.services_section_link_url || `/${locale}/about`}
-                className="group inline-flex items-center gap-2 md:gap-3 text-[11px] tracking-[0.2em] uppercase text-white hover:text-gold-400 transition-all duration-500 w-fit"
-              >
-                <span className="w-6 md:w-8 h-[1px] bg-gold-400/40 group-hover:w-10 md:group-hover:w-12 transition-all duration-500" aria-hidden="true" />
-                {settings?.services_section_link_text || dict.home.learnMore}
-                <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </Link>
-            </div>
-            {services.length > 0 && (
-              <div className="grid gap-4 md:gap-5">
-                {services.map((srv, i) => (
-                  <div
-                    key={i}
-                    className="group relative p-5 md:p-7 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-white/[0.03] hover:border-gold-400/20 transition-all duration-700 cursor-default overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-gold-400/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" aria-hidden="true" />
-                    <div className="relative z-10 flex items-start gap-4 md:gap-5">
-                      <span className="text-gold-400/40 text-xl md:text-2xl group-hover:text-gold-400 transition-colors duration-500 mt-1 flex-shrink-0" aria-hidden="true">
-                        {srv.icon}
-                      </span>
-                      <div>
-                        <h3 className="text-sm md:text-base font-heading font-semibold tracking-wide text-white mb-1.5 md:mb-2 group-hover:text-gold-400 transition-colors duration-500">
-                          {srv.title}
-                        </h3>
-                        <p className="text-xs md:text-sm font-light text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-200">
-                          {srv.desc}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="absolute top-4 right-4 md:top-6 md:right-6 text-[10px] text-gray-700 font-heading font-bold group-hover:text-gold-400/30 transition-colors duration-500" aria-hidden="true">
-                      0{i + 1}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* ── MARQUEE ── */}
       <section className="py-8 md:py-12 overflow-hidden border-y border-white/[0.03]" aria-hidden="true">
         <div className="flex whitespace-nowrap" style={{ animation: "marquee 25s linear infinite" }}>
-          {/* Two identical sets — second set creates the seamless loop */}
           {[0, 1].map((setIndex) => (
             <div key={setIndex} className="flex items-center gap-8 md:gap-16 px-4 md:px-8 flex-shrink-0">
-              {["DESIGN", "PHOTOGRAPHY", "VIDEO", "AUDIO", "WEB DEV", "AI", "BRANDING", "MOTION"].map((word, i) => (
+              {["DESIGN", "PHOTOGRAPHY", "VIDEO", "AUDIO", "FULL-STACK", "CYBERSECURITY", "MOTION", "EVENTS"].map((word, i) => (
                 <span
                   key={`${setIndex}-${i}`}
                   className="text-xl sm:text-2xl md:text-4xl font-heading font-bold uppercase tracking-wider text-white/40 hover:text-gold-400 transition-colors duration-500 cursor-default select-none"

@@ -24,23 +24,23 @@ interface FieldState {
   error: string;
 }
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateName(value: string): string {
-  if (!value.trim()) return 'Name is required';
-  if (value.trim().length < 2) return 'Name must be at least 2 characters';
+  if (!value.trim()) return 'Veuillez saisir votre nom (min. 2 caractères)';
+  if (value.trim().length < 2) return 'Veuillez saisir votre nom (min. 2 caractères)';
   return '';
 }
 
 function validateEmail(value: string): string {
-  if (!value.trim()) return 'Email is required';
-  if (!EMAIL_REGEX.test(value.trim())) return 'Please enter a valid email address';
+  if (!value.trim()) return 'Veuillez saisir une adresse email valide';
+  if (!EMAIL_REGEX.test(value.trim())) return 'Veuillez saisir une adresse email valide';
   return '';
 }
 
 function validateMessage(value: string): string {
-  if (!value.trim()) return 'Message is required';
-  if (value.trim().length < 10) return `Message must be at least 10 characters (${value.trim().length}/10)`;
+  if (!value.trim()) return 'Votre message doit contenir au minimum 10 caractères';
+  if (value.trim().length < 10) return 'Votre message doit contenir au minimum 10 caractères';
   return '';
 }
 
@@ -49,6 +49,7 @@ export function ContactForm({ dict }: ContactFormProps) {
   const [email, setEmail] = useState<FieldState>({ value: '', touched: false, error: '' });
   const [message, setMessage] = useState<FieldState>({ value: '', touched: false, error: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -67,6 +68,7 @@ export function ContactForm({ dict }: ContactFormProps) {
   }, []);
 
   const handleChange = useCallback((field: 'name' | 'email' | 'message', value: string) => {
+    setSubmitError(false);
     switch (field) {
       case 'name':
         setName((prev) => ({
@@ -94,10 +96,10 @@ export function ContactForm({ dict }: ContactFormProps) {
 
   const getFieldClasses = (field: FieldState) => {
     const base =
-      'w-full bg-white/[0.03] border rounded-xl px-4 md:px-5 py-3.5 md:py-4 text-white text-sm focus:outline-none focus:bg-white/[0.05] transition-all duration-500 placeholder:text-gray-700';
-    if (!field.touched) return `${base} border-white/[0.06] focus:border-gold-400/40`;
-    if (field.error) return `${base} border-red-500 focus:border-red-400`;
-    return `${base} border-green-500 focus:border-green-400`;
+      'w-full bg-white/[0.03] border rounded-xl px-4 md:px-5 py-3.5 md:py-4 text-white text-sm focus:ring-2 focus:ring-white focus:outline-none focus:bg-white/[0.05] transition-all duration-500 placeholder:text-gray-700';
+    if (!field.touched) return `${base} border-white/[0.06]`;
+    if (field.error) return `${base} border-red-500 focus:ring-red-400`;
+    return `${base} border-green-500 focus:ring-green-400`;
   };
 
   const isFormValid =
@@ -105,6 +107,7 @@ export function ContactForm({ dict }: ContactFormProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubmitError(false);
 
     // Touch all fields to show errors
     setName((prev) => ({ ...prev, touched: true, error: validateName(prev.value) }));
@@ -119,11 +122,19 @@ export function ContactForm({ dict }: ContactFormProps) {
     formData.append('message', message.value.trim());
 
     startTransition(async () => {
-      await submitContactMessage(formData);
-      setSubmitted(true);
-      setName({ value: '', touched: false, error: '' });
-      setEmail({ value: '', touched: false, error: '' });
-      setMessage({ value: '', touched: false, error: '' });
+      try {
+        const result = await submitContactMessage(formData);
+        if (result?.success) {
+          setSubmitted(true);
+          setName({ value: '', touched: false, error: '' });
+          setEmail({ value: '', touched: false, error: '' });
+          setMessage({ value: '', touched: false, error: '' });
+        } else {
+          setSubmitError(true);
+        }
+      } catch {
+        setSubmitError(true);
+      }
     });
   };
 
@@ -135,15 +146,15 @@ export function ContactForm({ dict }: ContactFormProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl md:text-2xl font-heading font-bold text-white mb-3">Message Sent!</h3>
+        <h3 className="text-xl md:text-2xl font-heading font-bold text-white mb-3">✓ Message envoyé !</h3>
         <p className="text-gray-400 text-sm md:text-base max-w-sm mb-8">
-          Thank you for reaching out. I&apos;ll get back to you within 24 hours.
+          Votre message a bien été envoyé. Je vous répondrai dans les plus brefs délais.
         </p>
         <button
           onClick={() => setSubmitted(false)}
           className="px-6 py-3 border border-gold-400/30 rounded-xl text-gold-400 text-sm uppercase tracking-wider hover:bg-gold-400/10 transition-all duration-300"
         >
-          Send Another Message
+          Envoyer un autre message
         </button>
       </div>
     );
@@ -162,6 +173,15 @@ export function ContactForm({ dict }: ContactFormProps) {
         </h2>
         <p className="text-xs text-gray-500 font-light">{dict.formSubtitle}</p>
       </div>
+
+      {/* Submit error message */}
+      {submitError && (
+        <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-center">
+          <p className="text-red-400 text-sm">
+            Une erreur est survenue. Veuillez réessayer ou me contacter directement.
+          </p>
+        </div>
+      )}
 
       {/* Name */}
       <div className="relative group">
@@ -252,7 +272,7 @@ export function ContactForm({ dict }: ContactFormProps) {
         disabled={isPending}
         className="w-full bg-gradient-to-r from-gold-400 to-gold-500 text-black font-heading tracking-[0.15em] md:tracking-[0.2em] font-bold uppercase py-4 md:py-5 rounded-xl hover:from-white hover:to-white transition-all duration-500 transform hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(212,175,55,0.2)] magnetic-btn text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
-        {isPending ? 'Sending...' : dict.send}
+        {isPending ? 'Envoi en cours...' : dict.send}
       </button>
 
       <p className="text-[9px] text-gray-700 text-center uppercase tracking-wider">

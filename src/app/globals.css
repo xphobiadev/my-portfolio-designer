@@ -161,7 +161,7 @@ html[dir="rtl"] body {
 }
 
 @utility hover-lift {
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @utility shimmer {
@@ -381,7 +381,7 @@ html[dir="rtl"] body {
 
 .cinematic-image {
   filter: contrast(1.05) saturate(0.9);
-  transition: filter 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: filter 0.35s cubic-bezier(0.23, 1, 0.32, 1), transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Only apply hover effects on non-touch devices */
@@ -419,7 +419,7 @@ html[dir="rtl"] body {
 .magnetic-btn {
   position: relative;
   overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   /* Ensure minimum touch target size */
   min-height: 44px;
 }
@@ -431,7 +431,7 @@ html[dir="rtl"] body {
     inset: 0;
     background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, transparent 50%);
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
   }
 
   .magnetic-btn:hover::before {
@@ -448,7 +448,7 @@ html[dir="rtl"] body {
     background: rgba(212, 175, 55, 0.1);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
+    transition: width 0.3s ease, height 0.3s ease;
   }
 
   .magnetic-btn:hover::after {
@@ -464,7 +464,7 @@ html[dir="rtl"] body {
 .card-cinematic {
   position: relative;
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -474,7 +474,7 @@ html[dir="rtl"] body {
     inset: 0;
     background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.3s ease;
     z-index: 1;
   }
 
@@ -574,6 +574,28 @@ html[dir="rtl"] body {
 .admin-btn-danger:hover {
   box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
   background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PROJECTS GRID — responsive, prevents horizontal overflow on mobile 375px
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   TOUCH TARGET UTILITY — WCAG 2.5.5 minimum 44×44px interactive area
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -730,9 +752,14 @@ a.icon-only {
    Uses :focus-visible so it only appears for keyboard navigation.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
+/* Note: prefers-color-scheme: dark is not yet fully implemented as a separate theme variant.
+   Dark mode is the default/primary theme. The `[data-theme="dark"]` class and the `:root`
+   selector above already define the dark palette. When a full dark/light toggle is needed,
+   use the data-theme attribute approach already in place above. */
+
 :focus-visible {
-  outline: 2px solid #d4af37;
-  outline-offset: 3px;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
   border-radius: 4px;
   box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
 }
@@ -802,6 +829,187 @@ html[lang="ar"] h6 {
 
 html[lang="ar"] .font-heading {
   font-family: var(--font-arabic);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STORY NARRATIVE ANIMATIONS & STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Story chapter reveal animation */
+@keyframes story-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes story-fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes story-fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes chapter-number-glow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.6), 0 0 80px rgba(212, 175, 55, 0.2);
+  }
+}
+
+@keyframes timeline-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes skill-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Story section classes */
+.story-chapter {
+  animation: story-reveal 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.story-chapter:nth-child(1) { animation-delay: 0.1s; }
+.story-chapter:nth-child(2) { animation-delay: 0.2s; }
+.story-chapter:nth-child(3) { animation-delay: 0.3s; }
+.story-chapter:nth-child(4) { animation-delay: 0.4s; }
+.story-chapter:nth-child(5) { animation-delay: 0.5s; }
+.story-chapter:nth-child(6) { animation-delay: 0.6s; }
+
+.story-fade-left {
+  animation: story-fade-in-left 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.story-fade-right {
+  animation: story-fade-in-right 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.chapter-number {
+  animation: chapter-number-glow 3s ease-in-out infinite;
+}
+
+.timeline-line {
+  animation: timeline-grow 2s ease-out forwards;
+  transform-origin: top;
+}
+
+.skill-card {
+  animation: skill-card-enter 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.skill-card:nth-child(1) { animation-delay: 0.1s; }
+.skill-card:nth-child(2) { animation-delay: 0.2s; }
+.skill-card:nth-child(3) { animation-delay: 0.3s; }
+.skill-card:nth-child(4) { animation-delay: 0.4s; }
+.skill-card:nth-child(5) { animation-delay: 0.5s; }
+.skill-card:nth-child(6) { animation-delay: 0.6s; }
+.skill-card:nth-child(7) { animation-delay: 0.7s; }
+
+/* Story chapter card styling */
+.story-card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(10px);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.story-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(212, 175, 55, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(212, 175, 55, 0.05);
+}
+
+/* Timeline connector */
+.story-timeline-connector {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(212, 175, 55, 0.3) 10%,
+    rgba(212, 175, 55, 0.1) 90%,
+    transparent
+  );
+  transform: translateX(-50%);
+}
+
+.story-timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  background: var(--background, #030303);
+  position: relative;
+  z-index: 10;
+  transition: all 0.5s ease;
+}
+
+.story-timeline-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Prologue badge */
+.prologue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.05);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.8);
 }
 
 html[lang="ar"] .tracking-\[0\.15em\],

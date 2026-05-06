@@ -17,7 +17,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
     const rootCategories = categories.filter(c => !c.parent_id);
 
     return (
-        <div className="pt-24 md:pt-32 pb-16 md:pb-24 relative">
+        <main role="main" className="pt-24 md:pt-32 pb-16 md:pb-24 relative overflow-x-hidden">
             <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-gold-400/[0.02] to-transparent pointer-events-none" aria-hidden="true" />
 
             <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
@@ -39,7 +39,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                 </div>
 
                 {/* Category grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 overflow-x-hidden">
                     {rootCategories.map((category, index) => {
                         const representativeProject = projects.find((p) => p.category === category.name && p.cover_image);
                         const thumbnail = representativeProject?.cover_image || null;
@@ -115,6 +115,6 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     );
 }

@@ -26,14 +26,21 @@ export default async function Videos({ params }: { params: Promise<{ locale: str
                     {dict.nav.videos}
                 </h1>
                 <p className="text-gray-500 text-xs uppercase tracking-[0.3em]">
-                    {projects.length > 0 ? `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}` : ''}
+                    {projects.length > 0
+                        ? `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}`
+                        : dict.videos.subtitle}
                 </p>
             </div>
 
             {projects.length === 0 ? (
-                <p className="text-gray-500 text-xs uppercase tracking-widest text-center py-20">
-                    {dict.work.noProjectsInCategory}
-                </p>
+                <div className="text-center py-20 md:py-32 glass rounded-3xl px-8">
+                    <p className="text-gray-500 text-xs uppercase tracking-widest mb-4">
+                        {dict.videos.comingSoon}
+                    </p>
+                    <p className="text-gray-400 text-sm font-light max-w-lg mx-auto leading-relaxed">
+                        {dict.videos.noProjects}
+                    </p>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                     {projects.map((p: Project, index: number) => (

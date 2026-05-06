@@ -97,6 +97,9 @@ export default async function LocaleLayout({
         )}
       </head>
       <body className={`min-h-full flex flex-col bg-background text-foreground selection:bg-gold-400/20 selection:text-gold-300 ${dir === 'rtl' ? 'font-arabic' : 'font-sans'}`}>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">
+          Aller au contenu principal
+        </a>
         <ReadingProgress />
         <Header locale={lang} dict={dict} />
         <main id="main-content" className="flex-grow flex flex-col" aria-label="Main content">{children}</main>
