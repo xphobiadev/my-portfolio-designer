@@ -159,7 +159,11 @@
     "yourName": "Your Name",
     "yourEmail": "Your Email",
     "yourMessage": "Your Message",
-    "privacy": "Your information is safe and will never be shared."
+    "privacy": "Your information is safe and will never be shared.",
+    "whatsapp": "WhatsApp",
+    "whatsappValue": "+212 600 891 594",
+    "whatsappCta": "Chat on WhatsApp",
+    "whatsappOr": "or"
   },
   "videos": {
     "subtitle": "Video production & motion graphics",
