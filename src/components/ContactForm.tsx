@@ -18,6 +18,7 @@ interface ContactFormProps {
     whatsappCta: string;
     whatsappOr: string;
   };
+  whatsappNumber?: string;
 }
 
 interface FieldState {
@@ -46,7 +47,7 @@ function validateMessage(value: string): string {
   return '';
 }
 
-export function ContactForm({ dict }: ContactFormProps) {
+export function ContactForm({ dict, whatsappNumber }: ContactFormProps) {
   const [name, setName] = useState<FieldState>({ value: '', touched: false, error: '' });
   const [email, setEmail] = useState<FieldState>({ value: '', touched: false, error: '' });
   const [message, setMessage] = useState<FieldState>({ value: '', touched: false, error: '' });
@@ -165,8 +166,12 @@ export function ContactForm({ dict }: ContactFormProps) {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* WhatsApp direct contact CTA */}
+      {(() => {
+        const waNumber = (whatsappNumber ?? '212600891594').replace(/[^0-9]/g, '');
+        const waUrl = `https://wa.me/${waNumber}`;
+        return (
       <a
-        href="https://wa.me/212600891594"
+        href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex items-center justify-center gap-3 w-full py-4 md:py-5 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/[0.06] hover:bg-[#25D366]/[0.12] hover:border-[#25D366]/60 transition-all duration-500 transform hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(37,211,102,0.15)]"
@@ -178,6 +183,8 @@ export function ContactForm({ dict }: ContactFormProps) {
           {dict.whatsappCta}
         </span>
       </a>
+        );
+      })()}
 
       {/* OR divider */}
       <div className="flex items-center gap-4">

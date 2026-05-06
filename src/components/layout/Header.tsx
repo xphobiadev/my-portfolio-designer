@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/getDictionary";
 
-export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dictionary; logoText?: string }) {
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -85,7 +85,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                         aria-label="Home"
                     >
                         <span className="text-2xl md:text-3xl font-heading font-bold tracking-[0.15em] text-white group-hover:text-gold-400 transition-colors duration-500">
-                            MB
+                            {logoText ?? 'MB'}
                         </span>
                         <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold-400 group-hover:w-full transition-all duration-500" />
                     </Link>

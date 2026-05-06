@@ -57,7 +57,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                         </div>
                         {/* Years badge */}
                         <div className="absolute -bottom-4 right-0 sm:-right-4 lg:right-4 bg-obsidian-900/90 backdrop-blur-xl border border-gold-400/20 rounded-2xl px-4 md:px-6 py-3 md:py-4 z-20">
-                            <p className="text-2xl md:text-3xl font-heading font-bold gradient-text">20+</p>
+                            <p className="text-2xl md:text-3xl font-heading font-bold gradient-text">{settings?.stat_years ?? '20+'}</p>
                             <p className="text-[9px] uppercase tracking-[0.2em] text-gray-500">{dict.about.yearsOfCraft}</p>
                         </div>
                     </div>

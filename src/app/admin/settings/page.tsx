@@ -1,6 +1,6 @@
 import { getSettings } from '@/lib/data';
 import { updateSettings } from '../actions';
-import { Settings, FileText } from 'lucide-react';
+import { Settings, FileText, Type } from 'lucide-react';
 
 export default async function AdminSettings() {
     const settings = await getSettings();
@@ -42,6 +42,44 @@ export default async function AdminSettings() {
                 </div>
             </form>
 
+            {/* Branding & Marquee Settings */}
+            <form action={updateSettings} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
+                <input type="hidden" name="type" value="branding" />
+                <div className="flex items-center gap-3">
+                    <Type className="w-4 h-4 text-gold-400" />
+                    <h3 className="text-[10px] text-gold-400 uppercase tracking-[0.2em] font-bold">Branding &amp; Marquee</h3>
+                </div>
+
+                <div>
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Logo Text (initials shown in header/footer)</label>
+                    <input
+                        name="logo_text"
+                        maxLength={5}
+                        defaultValue={settings?.logo_text ?? 'MB'}
+                        placeholder="MB"
+                        className="w-full bg-black/30 border border-white/10 px-4 py-3 rounded-lg text-white text-sm focus:outline-none focus:border-gold-400/50 transition-colors placeholder:text-gray-600"
+                    />
+                </div>
+
+                <div>
+                    <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Marquee Words (comma-separated)</label>
+                    <textarea
+                        name="marquee_words"
+                        rows={2}
+                        defaultValue={settings?.marquee_words ?? ''}
+                        placeholder="DESIGN,PHOTOGRAPHY,VIDEO,AUDIO,FULL-STACK,CYBERSECURITY,MOTION,EVENTS"
+                        className="w-full bg-black/30 border border-white/10 px-4 py-3 rounded-lg text-white text-sm focus:outline-none focus:border-gold-400/50 transition-colors placeholder:text-gray-600 resize-none"
+                    />
+                    <p className="text-[9px] text-gray-600 mt-1">Comma-separated list, e.g.: DESIGN,PHOTOGRAPHY,VIDEO</p>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                    <button type="submit" className="bg-gold-400 text-black px-6 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all shadow-lg hover:-translate-y-0.5">
+                        Save Branding
+                    </button>
+                </div>
+            </form>
+
             {/* Current Configuration Overview */}
             <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
                 <div className="flex items-center gap-3">
@@ -63,6 +101,8 @@ export default async function AdminSettings() {
                         { label: 'Behance', value: settings?.contact_behance },
                         { label: 'LinkedIn', value: settings?.contact_linkedin },
                         { label: 'Footer Text', value: settings?.footer_text },
+                        { label: 'Logo Text', value: settings?.logo_text },
+                        { label: 'Marquee Words', value: settings?.marquee_words ? `${settings.marquee_words.substring(0, 40)}...` : null },
                         { label: 'Stat: Years', value: settings?.stat_years },
                         { label: 'Stat: Projects', value: settings?.stat_projects },
                         { label: 'Stat: Awards', value: settings?.stat_awards },

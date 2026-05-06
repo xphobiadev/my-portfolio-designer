@@ -11,6 +11,9 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
     const dict = await getDictionary(locale as Locale);
     const settings = await getSettings();
 
+    const whatsappNumber = (settings?.contact_whatsapp ?? '+212600891594').replace(/[^0-9]/g, '');
+    const whatsappUrl = `https://wa.me/${whatsappNumber}`;
+
     return (
         <div className="pt-24 md:pt-32 pb-0 relative min-h-screen">
             {/* Background glows */}
@@ -79,13 +82,13 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                                 </div>
                                 <div>
                                     <p className="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-0.5 md:mb-1">{dict.contact.location}</p>
-                                    <p className="text-xs md:text-sm text-gray-300">{dict.contact.locationValue}</p>
+                                    <p className="text-xs md:text-sm text-gray-300">{settings?.contact_location ?? dict.contact.locationValue}</p>
                                 </div>
                             </div>
 
                             {/* WhatsApp direct contact */}
                             <a
-                                href="https://wa.me/212600891594"
+                                href={whatsappUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group flex items-center gap-4 md:gap-5 p-3.5 md:p-4 rounded-xl border border-[#25D366]/20 hover:border-[#25D366]/50 hover:bg-[#25D366]/[0.04] transition-all duration-500"
@@ -98,7 +101,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                                 <div className="min-w-0">
                                     <p className="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-0.5 md:mb-1">{dict.contact.whatsapp}</p>
                                     <p className="text-xs md:text-sm text-gray-300 group-hover:text-[#25D366] transition-colors duration-500">
-                                        {dict.contact.whatsappValue}
+                                        {settings?.contact_whatsapp ?? dict.contact.whatsappValue}
                                     </p>
                                 </div>
                                 <ArrowUpRight className="w-4 h-4 text-gray-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex-shrink-0" aria-hidden="true" />
@@ -131,7 +134,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                     {/* ── Right: Contact Form ── */}
                     <div className="relative">
                         <div className="absolute -inset-4 md:-inset-8 bg-gold-400/[0.02] rounded-[3rem] blur-3xl pointer-events-none" aria-hidden="true" />
-                        <ContactForm dict={dict.contact} />
+                        <ContactForm dict={dict.contact} whatsappNumber={settings?.contact_whatsapp ?? '+212600891594'} />
                     </div>
                 </div>
             </div>

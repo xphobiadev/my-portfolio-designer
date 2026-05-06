@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import { getCategoriesList, getUnreadMessagesCount } from '@/lib/data';
 import type { Category } from '@/lib/types';
 import { AdminSidebar } from './components/AdminSidebar';
+import { AdminBreadcrumb } from './components/AdminBreadcrumb';
 import '../globals.css';
 
 // Force all admin routes to be dynamically rendered (they use connection() for DB access)
@@ -37,17 +38,27 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                     </div>
 
                     <AdminSidebar categories={categories} unreadCount={unreadCount} />
-                    
+
                     <main className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto min-w-0 ml-0 md:ml-72 relative z-10">
                         {/* Mobile Header */}
                         <div className="md:hidden flex items-center justify-between mb-8 pb-4 border-b border-white/[0.04]">
+                            {/* Spacer for the fixed mobile menu button (top-left) */}
+                            <div className="w-12" />
                             <Link href="/admin" className="text-lg font-heading font-bold text-gold-400 tracking-wider uppercase">
                                 Admin
                             </Link>
-                            <Link href="/fr" className="text-[9px] text-gray-500 uppercase tracking-[0.2em] hover:text-gold-400 transition-colors px-3 py-1.5 border border-white/[0.06] rounded-full">
+                            <Link
+                                href="/"
+                                target="_blank"
+                                className="text-[9px] text-gray-500 uppercase tracking-[0.2em] hover:text-gold-400 transition-colors px-3 py-1.5 border border-white/[0.06] rounded-full"
+                            >
                                 View Site →
                             </Link>
                         </div>
+
+                        {/* Desktop breadcrumb */}
+                        <AdminBreadcrumb />
+
                         {children}
                     </main>
                 </div>

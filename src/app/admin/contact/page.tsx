@@ -1,6 +1,6 @@
 import { getSettings } from '@/lib/data';
 import { updateSettings } from '../actions';
-import { Mail, Phone, Globe, Link2 } from 'lucide-react';
+import { Mail, Phone, Globe, Link2, MapPin, MessageCircle } from 'lucide-react';
 
 export default async function AdminContact() {
     const settings = await getSettings();
@@ -55,6 +55,30 @@ export default async function AdminContact() {
                                 name="contact_phone"
                                 defaultValue={settings?.contact_phone || ''}
                                 placeholder="+212 6 12 34 56 78"
+                                className="admin-input"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[9px] text-gray-500 uppercase tracking-[0.2em] mb-2 flex items-center gap-2 font-medium">
+                                <MessageCircle className="w-3 h-3" /> WhatsApp Number
+                            </label>
+                            <input
+                                type="text"
+                                name="contact_whatsapp"
+                                defaultValue={settings?.contact_whatsapp ?? ''}
+                                placeholder="+212600891594"
+                                className="admin-input"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[9px] text-gray-500 uppercase tracking-[0.2em] mb-2 flex items-center gap-2 font-medium">
+                                <MapPin className="w-3 h-3" /> Location / City
+                            </label>
+                            <input
+                                type="text"
+                                name="contact_location"
+                                defaultValue={settings?.contact_location ?? ''}
+                                placeholder="Morocco"
                                 className="admin-input"
                             />
                         </div>

@@ -67,6 +67,10 @@ export interface SiteSettings {
     contact_instagram: string | null;
     contact_behance: string | null;
     contact_linkedin: string | null;
+    contact_whatsapp: string | null;
+    contact_location: string | null;
+    logo_text: string | null;
+    marquee_words: string | null;
     footer_text: string | null;
     updated_at: string;
 }

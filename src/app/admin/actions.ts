@@ -232,13 +232,17 @@ export async function updateSettings(formData: FormData) {
         const contact_instagram = formData.get('contact_instagram') as string;
         const contact_behance = formData.get('contact_behance') as string;
         const contact_linkedin = formData.get('contact_linkedin') as string;
+        const contact_whatsapp = formData.get('contact_whatsapp') as string;
+        const contact_location = formData.get('contact_location') as string;
 
         await supabase.from('site_settings').update({
             contact_email,
             contact_phone,
             contact_instagram,
             contact_behance,
-            contact_linkedin
+            contact_linkedin,
+            contact_whatsapp,
+            contact_location
         }).eq('id', 1);
     } else if (type === 'hero') {
         const hero_title = formData.get('hero_title') as string;
@@ -326,6 +330,14 @@ export async function updateSettings(formData: FormData) {
     } else if (type === 'footer') {
         const footer_text = formData.get('footer_text') as string;
         await supabase.from('site_settings').update({ footer_text }).eq('id', 1);
+    } else if (type === 'branding') {
+        const logo_text = formData.get('logo_text') as string;
+        const marquee_words = formData.get('marquee_words') as string;
+
+        await supabase.from('site_settings').update({
+            logo_text,
+            marquee_words
+        }).eq('id', 1);
     }
 
     revalidateAll();

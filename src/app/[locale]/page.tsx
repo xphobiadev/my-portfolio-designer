@@ -401,10 +401,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
       {/* ── MARQUEE ── */}
       <section className="py-8 md:py-12 overflow-hidden border-y border-white/[0.03]" aria-hidden="true">
+        {(() => {
+          const marqueeWords = settings?.marquee_words
+            ? settings.marquee_words.split(',').map(w => w.trim()).filter(Boolean)
+            : ["DESIGN", "PHOTOGRAPHY", "VIDEO", "AUDIO", "FULL-STACK", "CYBERSECURITY", "MOTION", "EVENTS"];
+          return (
         <div className="flex whitespace-nowrap" style={{ animation: "marquee 25s linear infinite" }}>
           {[0, 1].map((setIndex) => (
             <div key={setIndex} className="flex items-center gap-8 md:gap-16 px-4 md:px-8 flex-shrink-0">
-              {["DESIGN", "PHOTOGRAPHY", "VIDEO", "AUDIO", "FULL-STACK", "CYBERSECURITY", "MOTION", "EVENTS"].map((word, i) => (
+              {marqueeWords.map((word, i) => (
                 <span
                   key={`${setIndex}-${i}`}
                   className="text-xl sm:text-2xl md:text-4xl font-heading font-bold uppercase tracking-wider text-white/40 hover:text-gold-400 transition-colors duration-500 cursor-default select-none"
@@ -416,6 +421,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </div>
           ))}
         </div>
+          );
+        })()}
       </section>
     </>
   );

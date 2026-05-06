@@ -68,7 +68,7 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                                 className="text-2xl md:text-3xl font-heading font-bold tracking-[0.15em] text-white hover:text-gold-400 transition-colors duration-500 inline-block"
                                 aria-label="Home"
                             >
-                                MB
+                                {settings?.logo_text ?? 'MB'}
                             </Link>
                             <p className="text-sm text-gray-400 mt-4 leading-relaxed font-light max-w-xs">
                                 {dict.footer.description}
@@ -135,7 +135,7 @@ export function Footer({ locale, dict, settings }: { locale: Locale; dict: Dicti
                     {/* Bottom Bar */}
                     <div className="flex flex-col sm:flex-row justify-between items-center mt-10 md:mt-16 pt-6 md:pt-8 border-t border-white/[0.04] gap-3">
                         <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em] text-center sm:text-left">
-                            © {new Date().getFullYear()} Mohamed Bouliani. {dict.footer.rights}
+                            {settings?.footer_text ?? `© ${new Date().getFullYear()} Mohamed Bouliani.`} {dict.footer.rights}
                         </p>
                         <p className="text-[10px] text-gray-400 uppercase tracking-[0.15em] text-center sm:text-right">
                             {dict.footer.crafted}

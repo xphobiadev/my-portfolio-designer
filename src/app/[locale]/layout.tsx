@@ -101,7 +101,7 @@ export default async function LocaleLayout({
           Aller au contenu principal
         </a>
         <ReadingProgress />
-        <Header locale={lang} dict={dict} />
+        <Header locale={lang} dict={dict} logoText={settings?.logo_text ?? 'MB'} />
         <main id="main-content" className="flex-grow flex flex-col" aria-label="Main content">{children}</main>
         <Footer locale={lang} dict={dict} settings={settings} />
       </body>
