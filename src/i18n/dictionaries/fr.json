@@ -148,12 +148,41 @@
     "successTitle": "Envoyé !",
     "successMessage": "Merci de m'avoir contacté. Je vous répondrai rapidement.",
     "errorTitle": "Erreur",
-    "errorMessage": "Une erreur s'est produite. Veuillez réessayer."
+    "errorMessage": "Une erreur s'est produite. Veuillez réessayer.",
+    "email": "Email",
+    "phone": "Téléphone",
+    "location": "Localisation",
+    "locationValue": "Maroc",
+    "followMe": "Suivez-moi",
+    "formTitle": "Envoyer un Message",
+    "formSubtitle": "Remplissez le formulaire ci-dessous et je vous répondrai dans les plus brefs délais.",
+    "yourName": "Votre Nom",
+    "yourEmail": "Votre Email",
+    "yourMessage": "Votre Message",
+    "privacy": "Vos informations sont en sécurité et ne seront jamais partagées."
+  },
+  "videos": {
+    "subtitle": "Production vidéo & motion graphics",
+    "comingSoon": "Bientôt disponible",
+    "noProjects": "Les projets vidéo sont en préparation. Revenez bientôt."
+  },
+  "audio": {
+    "subtitle": "Ingénierie audio & design sonore",
+    "comingSoon": "Bientôt disponible",
+    "noProjects": "Les projets audio sont en préparation. Revenez bientôt."
   },
   "footer": {
     "tagline": "Un créatif multidisciplinaire transformant les idées en expériences exceptionnelles",
     "navigation": "Navigation",
     "connect": "Connexion",
-    "copyright": "Tous droits réservés"
+    "copyright": "Tous droits réservés",
+    "cta": "Prêt à commencer ?",
+    "letsWork": "Travaillons",
+    "together": "Ensemble",
+    "startProject": "Démarrer un Projet",
+    "description": "Un créatif multidisciplinaire transformant les idées en expériences exceptionnelles.",
+    "comingSoon": "Bientôt",
+    "rights": "Tous droits réservés.",
+    "crafted": "Créé avec passion & précision"
   }
 }

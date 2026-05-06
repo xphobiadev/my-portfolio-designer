@@ -148,12 +148,41 @@
     "successTitle": "Sent!",
     "successMessage": "Thank you for reaching out. I'll get back to you soon.",
     "errorTitle": "Error",
-    "errorMessage": "Something went wrong. Please try again."
+    "errorMessage": "Something went wrong. Please try again.",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "locationValue": "Morocco",
+    "followMe": "Follow Me",
+    "formTitle": "Send a Message",
+    "formSubtitle": "Fill out the form below and I'll get back to you as soon as possible.",
+    "yourName": "Your Name",
+    "yourEmail": "Your Email",
+    "yourMessage": "Your Message",
+    "privacy": "Your information is safe and will never be shared."
+  },
+  "videos": {
+    "subtitle": "Video production & motion graphics",
+    "comingSoon": "Coming Soon",
+    "noProjects": "Video projects are being prepared. Check back soon."
+  },
+  "audio": {
+    "subtitle": "Audio engineering & sound design",
+    "comingSoon": "Coming Soon",
+    "noProjects": "Audio projects are being prepared. Check back soon."
   },
   "footer": {
     "tagline": "A multidisciplinary creative turning ideas into exceptional experiences",
     "navigation": "Navigation",
     "connect": "Connect",
-    "copyright": "All rights reserved"
+    "copyright": "All rights reserved",
+    "cta": "Ready to start?",
+    "letsWork": "Let's Work",
+    "together": "Together",
+    "startProject": "Start a Project",
+    "description": "A multidisciplinary creative turning ideas into exceptional experiences.",
+    "comingSoon": "Coming Soon",
+    "rights": "All rights reserved.",
+    "crafted": "Crafted with passion & precision"
   }
 }
