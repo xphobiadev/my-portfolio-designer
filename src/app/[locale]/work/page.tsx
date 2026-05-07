@@ -105,17 +105,17 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
 
                                             {/* Gradient overlays */}
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-700 z-10" aria-hidden="true" />
-                                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" style={{ background: 'linear-gradient(135deg, var(--color-accent)/10, transparent)' }} aria-hidden="true" />
+                                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent)' }} aria-hidden="true" />
 
                                             {/* Content overlay */}
                                             <div className="absolute bottom-0 left-0 w-full p-5 md:p-8 z-20 flex flex-col justify-end h-full">
                                                 <div className="mb-auto">
                                                     <span className="inline-flex items-center px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[9px] uppercase tracking-[0.2em] backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                                                         style={{
-                                                            backgroundColor: 'var(--color-accent)/10',
-                                                            border: '1px solid var(--color-accent)/20',
-                                                            color: 'var(--color-accent)',
-                                                        }}
+                                                                backgroundColor: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
+                                                                border: '1px solid color-mix(in srgb, var(--color-accent) 20%, transparent)',
+                                                                color: 'var(--color-accent)',
+                                                            }}
                                                     >
                                                         {projectCount} {projectCount === 1 ? dict.work.project : dict.work.projects}
                                                     </span>

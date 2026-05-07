@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
   compress: true,
   // Power by header removal for security
   poweredByHeader: false,
-  // Standalone output for optimized Docker/Vercel deployments
-  output: 'standalone',
   // Disable source maps in production for smaller bundles
   productionBrowserSourceMaps: false,
   images: {
