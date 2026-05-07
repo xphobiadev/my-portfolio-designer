@@ -17,6 +17,10 @@ export default async function Photography({ params }: { params: Promise<{ locale
         p.category === 'Photographie'
     );
 
+    const countLabel = projects.length === 1
+        ? `1 ${dict.photography.project}`
+        : `${projects.length} ${dict.photography.projects}`;
+
     return (
         <main role="main" className="pt-24 md:pt-32 pb-16 md:pb-24 container mx-auto px-4 sm:px-6 md:px-12">
             {/* Page header */}
@@ -25,7 +29,7 @@ export default async function Photography({ params }: { params: Promise<{ locale
                     {dict.nav.photography}
                 </h1>
                 <p className="text-xs uppercase tracking-[0.3em]" style={{ color: 'var(--color-text-muted)' }}>
-                    {projects.length > 0 ? `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}` : ''}
+                    {projects.length > 0 ? countLabel : ''}
                 </p>
             </div>
 

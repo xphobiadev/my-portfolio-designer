@@ -1,4 +1,36 @@
 {
+  "accessibility": {
+    "skipToContent": "Skip to main content"
+  },
+  "meta": {
+    "title": "Mohamed Bouliani | Cinematic Portfolio",
+    "description": "Designer. Photographer. Filmmaker. Audio Engineer. Crafting powerful brands and immersive cinematic experiences."
+  },
+  "categoryNames": {
+    "Photographie": "Photography",
+    "Design Graphique": "Graphic Design",
+    "Production Vidéo": "Video Production",
+    "Ingénierie Audio": "Audio Engineering",
+    "Développement Web": "Web Development",
+    "Motion Design": "Motion Design",
+    "Identité Visuelle": "Visual Identity",
+    "Réseaux Sociaux & Publicité": "Social Media & Advertising",
+    "Retouche & Manipulation Photo": "Photo Retouching & Manipulation",
+    "Design d'Espaces Professionnels": "Professional Space Design",
+    "Design LED & Écrans": "LED & Screen Design",
+    "Impression & Textile": "Print & Textile",
+    "Ingénieur IA & Prompting": "AI Engineer & Prompting",
+    "Réunions RNI Jeunes": "RNI Youth Meetings",
+    "Festivals": "Festivals",
+    "Conferences": "Conferences",
+    "Content Creation": "Content Creation",
+    "Cyber Security": "Cyber Security",
+    "Event Production": "Event Production",
+    "Media Production": "Media Production",
+    "Motion Graphics": "Motion Graphics",
+    "Photography": "Photography",
+    "Audio Engineering": "Audio Engineering"
+  },
   "nav": {
     "work": "Work",
     "photography": "Photography",
@@ -164,6 +196,10 @@
     "whatsappValue": "+212 600 891 594",
     "whatsappCta": "Chat on WhatsApp",
     "whatsappOr": "or"
+  },
+  "photography": {
+    "project": "project",
+    "projects": "projects"
   },
   "videos": {
     "subtitle": "Video production & motion graphics",

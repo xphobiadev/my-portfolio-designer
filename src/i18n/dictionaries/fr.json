@@ -1,4 +1,36 @@
 {
+  "accessibility": {
+    "skipToContent": "Aller au contenu principal"
+  },
+  "meta": {
+    "title": "Mohamed Bouliani | Portfolio Cinématique",
+    "description": "Designer. Photographe. Cinéaste. Ingénieur Audio. Créant des marques puissantes et des expériences cinématiques immersives."
+  },
+  "categoryNames": {
+    "Photographie": "Photographie",
+    "Design Graphique": "Design Graphique",
+    "Production Vidéo": "Production Vidéo",
+    "Ingénierie Audio": "Ingénierie Audio",
+    "Développement Web": "Développement Web",
+    "Motion Design": "Motion Design",
+    "Identité Visuelle": "Identité Visuelle",
+    "Réseaux Sociaux & Publicité": "Réseaux Sociaux & Publicité",
+    "Retouche & Manipulation Photo": "Retouche & Manipulation Photo",
+    "Design d'Espaces Professionnels": "Design d'Espaces Professionnels",
+    "Design LED & Écrans": "Design LED & Écrans",
+    "Impression & Textile": "Impression & Textile",
+    "Ingénieur IA & Prompting": "Ingénieur IA & Prompting",
+    "Réunions RNI Jeunes": "Réunions RNI Jeunes",
+    "Festivals": "Festivals",
+    "Conferences": "Conférences",
+    "Content Creation": "Création de Contenu",
+    "Cyber Security": "Cybersécurité",
+    "Event Production": "Production Événementielle",
+    "Media Production": "Production Médiatique",
+    "Motion Graphics": "Motion Graphics",
+    "Photography": "Photographie",
+    "Audio Engineering": "Ingénierie Audio"
+  },
   "nav": {
     "work": "Travaux",
     "photography": "Photographie",
@@ -164,6 +196,10 @@
     "whatsappValue": "+212 600 891 594",
     "whatsappCta": "Contacter via WhatsApp",
     "whatsappOr": "ou"
+  },
+  "photography": {
+    "project": "projet",
+    "projects": "projets"
   },
   "videos": {
     "subtitle": "Production vidéo & motion graphics",

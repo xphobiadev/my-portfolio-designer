@@ -83,20 +83,12 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                             {dict.about.intro}
                         </p>
 
-                        {/* Bio paragraphs as story */}
-                        {settings?.about_bio ? (
-                            <div className="space-y-4 md:space-y-5 text-gray-400 leading-relaxed font-light text-base md:text-lg">
-                                {settings.about_bio.split('\n').filter(Boolean).map((paragraph: string, i: number) => (
-                                    <p key={i}>{paragraph}</p>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="space-y-4 md:space-y-5 text-gray-400 leading-relaxed font-light text-base md:text-lg">
-                                <p>{dict.about.bio1}</p>
-                                <p>{dict.about.bio2}</p>
-                                <p>{dict.about.bio3}</p>
-                            </div>
-                        )}
+                        {/* Bio paragraphs as story — always use localized dict keys to avoid single-language database content bleeding into other locales */}
+                        <div className="space-y-4 md:space-y-5 text-gray-400 leading-relaxed font-light text-base md:text-lg">
+                            <p>{dict.about.bio1}</p>
+                            <p>{dict.about.bio2}</p>
+                            <p>{dict.about.bio3}</p>
+                        </div>
 
                         {/* CTA buttons */}
                         <div className="flex flex-wrap gap-3 md:gap-4 mt-8 md:mt-10">
@@ -150,7 +142,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                                     {service.desc}
                                 </p>
                                 <div className="pt-3 md:pt-4 border-t border-white/[0.04]">
-                                    <p className="text-[10px] tracking-[0.15em] uppercase text-gray-600 group-hover:text-gray-500 transition-colors duration-500">
+                                    {/* Tool names are brand names (LTR); use dir="ltr" so they render correctly in RTL context */}
+                                    <p className="text-[10px] tracking-[0.15em] uppercase text-gray-600 group-hover:text-gray-500 transition-colors duration-500" dir="ltr">
                                         {service.tools}
                                     </p>
                                 </div>

@@ -32,25 +32,6 @@ const cairo = Cairo({
   preload: false, // only load when needed
 });
 
-export const metadata: Metadata = {
-  title: "Mohamed Bouliani | Cinematic Portfolio",
-  description: "Designer. Photographer. Filmmaker. Audio Engineer. Crafting powerful brands and immersive cinematic experiences.",
-  keywords: ["portfolio", "designer", "photographer", "filmmaker", "audio engineer", "cinematic", "creative"],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mohamedbouliani.com'),
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Mohamed Bouliani Portfolio',
-  },
-  twitter: {
-    card: 'summary_large_image',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
-
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -62,6 +43,34 @@ export const viewport: Viewport = {
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale as Locale);
+  const ogLocaleMap: Record<string, string> = { fr: 'fr_FR', en: 'en_US', ar: 'ar_MA' };
+  return {
+    title: dict.meta.title,
+    description: dict.meta.description,
+    keywords: ["portfolio", "designer", "photographer", "filmmaker", "audio engineer", "cinematic", "creative"],
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mohamedbouliani.com'),
+    openGraph: {
+      type: 'website',
+      locale: ogLocaleMap[locale] || 'fr_FR',
+      siteName: 'Mohamed Bouliani Portfolio',
+      title: dict.meta.title,
+      description: dict.meta.description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: dict.meta.title,
+      description: dict.meta.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
 }
 
 export default async function LocaleLayout({
@@ -102,7 +111,7 @@ export default async function LocaleLayout({
       <body className={`min-h-full flex flex-col bg-background text-foreground selection:bg-gold-400/20 selection:text-gold-300 ${dir === 'rtl' ? 'font-arabic' : 'font-sans'}`}>
         <SmoothScroll>
           <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">
-            Aller au contenu principal
+            {dict.accessibility.skipToContent}
           </a>
           <ScrollReveal />
           <CustomCursor />

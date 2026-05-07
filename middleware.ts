@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { locales, defaultLocale } from './src/i18n/config';
 
+// Aliases that should redirect to their canonical paths
+const PATH_ALIASES: Record<string, string> = {
+  '/travaux': '/work',
+};
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -21,6 +26,17 @@ export function middleware(request: NextRequest) {
   );
 
   if (pathnameHasLocale) {
+    // Handle path aliases within localized routes (e.g. /fr/travaux → /fr/work)
+    for (const locale of locales) {
+      for (const [alias, canonical] of Object.entries(PATH_ALIASES)) {
+        const aliasPath = `/${locale}${alias}`;
+        if (pathname === aliasPath || pathname.startsWith(`${aliasPath}/`)) {
+          const url = request.nextUrl.clone();
+          url.pathname = pathname.replace(alias, canonical);
+          return NextResponse.redirect(url, { status: 301 });
+        }
+      }
+    }
     return NextResponse.next();
   }
 

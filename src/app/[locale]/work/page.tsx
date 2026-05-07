@@ -17,7 +17,16 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
     const categories: Category[] = await getCategoriesList();
     const projects: Project[] = await getProjects();
 
-    const rootCategories = categories.filter(c => !c.parent_id);
+    // Only show root categories that have at least one project
+    const rootCategories = categories
+        .filter(c => !c.parent_id)
+        .filter(c => projects.some(p => p.category === c.name));
+
+    // Get translated category display name
+    const getCategoryDisplayName = (name: string): string => {
+        const map = dict.categoryNames as Record<string, string>;
+        return map[name] ?? name;
+    };
 
     return (
         <main role="main" className="relative overflow-x-hidden" style={{ minHeight: '100vh' }}>
@@ -61,29 +70,30 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                 <div className="container mx-auto px-4 sm:px-6 md:px-12">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                         {rootCategories.map((category, index) => {
-                            const representativeProject = projects.find((p) => p.category === category.name && p.cover_image);
-                            const thumbnail = representativeProject?.cover_image || null;
-                            const projectCount = projects.filter((p) => p.category === category.name).length;
-                            const staggerClass = `stagger-${(index % 5) + 1}`;
-
-                            return (
-                                <div key={category.id} className={`reveal reveal-scale ${staggerClass} ${index === 0 ? 'sm:col-span-2' : ''}`}>
-                                    <TiltCard
-                                        className="rounded-2xl"
-                                        tiltStrength={8}
-                                        scale={1.02}
-                                        glare={true}
-                                    >
-                                        <Link
-                                            href={`/${locale}/work/category/${encodeURIComponent(category.name)}`}
-                                            className={`group block relative rounded-2xl overflow-hidden border transition-all duration-700 ${
-                                                index === 0 ? 'aspect-[16/9]' : 'aspect-[4/3]'
-                                            }`}
-                                            style={{
-                                                borderColor: 'var(--color-border)',
-                                                backgroundColor: 'var(--color-bg-secondary)',
-                                            }}
+                                const representativeProject = projects.find((p) => p.category === category.name && p.cover_image);
+                                const thumbnail = representativeProject?.cover_image || null;
+                                const projectCount = projects.filter((p) => p.category === category.name).length;
+                                const staggerClass = `stagger-${(index % 5) + 1}`;
+                                const displayName = getCategoryDisplayName(category.name);
+    
+                                return (
+                                    <div key={category.id} className={`reveal reveal-scale ${staggerClass} ${index === 0 ? 'sm:col-span-2' : ''}`}>
+                                        <TiltCard
+                                            className="rounded-2xl"
+                                            tiltStrength={8}
+                                            scale={1.02}
+                                            glare={true}
                                         >
+                                            <Link
+                                                href={`/${locale}/work/category/${encodeURIComponent(category.name)}`}
+                                                className={`group block relative rounded-2xl overflow-hidden border transition-all duration-700 ${
+                                                    index === 0 ? 'aspect-[16/9]' : 'aspect-[4/3]'
+                                                }`}
+                                                style={{
+                                                    borderColor: 'var(--color-border)',
+                                                    backgroundColor: 'var(--color-bg-secondary)',
+                                                }}
+                                            >
                                             {thumbnail ? (
                                                 <Image
                                                     src={thumbnail}
@@ -99,7 +109,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                                                 />
                                             ) : (
                                                 <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary))' }}>
-                                                    <span className="text-4xl md:text-6xl font-heading font-bold uppercase opacity-[0.03]" style={{ color: 'var(--color-text)' }}>{category.name}</span>
+                                                    <span className="text-4xl md:text-6xl font-heading font-bold uppercase opacity-[0.03]" style={{ color: 'var(--color-text)' }}>{displayName}</span>
                                                 </div>
                                             )}
 
@@ -131,7 +141,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                                                     <h3 className={`font-heading font-bold uppercase tracking-wide transition-colors duration-500 group-hover:text-[var(--color-accent)] ${
                                                         index === 0 ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-xl md:text-2xl'
                                                     }`} style={{ color: 'var(--color-text)' }}>
-                                                        {category.name}
+                                                        {displayName}
                                                     </h3>
 
                                                     <div className="mt-3 md:mt-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">

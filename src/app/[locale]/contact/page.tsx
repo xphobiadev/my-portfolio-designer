@@ -70,7 +70,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                                 <div className="min-w-0">
                                     <p className="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-0.5 md:mb-1">{dict.contact.phone}</p>
                                     <p className="text-xs md:text-sm text-gray-300 group-hover:text-gold-400 transition-colors duration-500">
-                                        {settings?.contact_phone || '+212 6 12 34 56 78'}
+                                        <span dir="ltr">{settings?.contact_phone || '+212 6 12 34 56 78'}</span>
                                     </p>
                                 </div>
                                 <ArrowUpRight className="w-4 h-4 text-gray-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex-shrink-0" aria-hidden="true" />
@@ -101,7 +101,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                                 <div className="min-w-0">
                                     <p className="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-0.5 md:mb-1">{dict.contact.whatsapp}</p>
                                     <p className="text-xs md:text-sm text-gray-300 group-hover:text-[#25D366] transition-colors duration-500">
-                                        {settings?.contact_whatsapp ?? dict.contact.whatsappValue}
+                                        <span dir="ltr">{settings?.contact_whatsapp ?? dict.contact.whatsappValue}</span>
                                     </p>
                                 </div>
                                 <ArrowUpRight className="w-4 h-4 text-gray-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex-shrink-0" aria-hidden="true" />

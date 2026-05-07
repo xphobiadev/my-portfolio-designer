@@ -111,13 +111,13 @@ export default function HomeClient({ locale, dict, projects, settings }: HomeCli
               </span>
             </div>
 
-            {/* Main heading with TextReveal - character by character */}
+            {/* Main heading with TextReveal - character by character (word-by-word for RTL to preserve number directionality) */}
             <div className="mb-8 md:mb-10">
               <TextReveal
                 text={settings?.hero_title || dict.home.heroTitle}
                 as="h1"
                 className="text-[clamp(2.5rem,8vw,7rem)] font-heading font-bold uppercase leading-[0.85] tracking-[-0.02em] text-[var(--color-text)]"
-                splitBy="char"
+                splitBy={locale === 'ar' ? 'word' : 'char'}
                 animation="fade-up"
                 delay={0.2}
               />
