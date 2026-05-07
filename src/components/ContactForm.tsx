@@ -126,7 +126,7 @@ export function ContactForm({ dict, whatsappNumber }: ContactFormProps) {
 
     startTransition(async () => {
       try {
-        const result = await submitContactMessage(formData);
+        const result = await submitContactMessage(null, formData);
         if (result?.success) {
           setSubmitted(true);
           setName({ value: '', touched: false, error: '' });

@@ -2,6 +2,7 @@ import { getCategoriesList } from '@/lib/data';
 import { createCategory, deleteCategory } from '@/app/admin/actions';
 import type { Category } from '@/lib/types';
 import { Layers, Trash2, Plus } from 'lucide-react';
+import { AdminFormWrapper, ActionButton } from '../components/AdminFormWrapper';
 
 export default async function AdminCategories() {
     const categories: Category[] = await getCategoriesList();
@@ -30,7 +31,7 @@ export default async function AdminCategories() {
                     <Plus className="w-4 h-4 text-gold-400" />
                     <h3 className="text-xs text-gold-400 uppercase tracking-[0.15em] font-bold">Add New Category</h3>
                 </div>
-                <form action={createCategory} className="flex flex-col md:flex-row gap-4">
+                <AdminFormWrapper action={createCategory} submitLabel="Add" className="flex flex-col md:flex-row gap-4 flex-wrap">
                     <div className="flex-1">
                         <input
                             type="text"
@@ -51,10 +52,7 @@ export default async function AdminCategories() {
                             ))}
                         </select>
                     </div>
-                    <button type="submit" className="admin-btn whitespace-nowrap flex items-center gap-2">
-                        <Plus className="w-3 h-3" /> Add
-                    </button>
-                </form>
+                </AdminFormWrapper>
             </div>
 
             {/* Categories Grid */}
@@ -83,16 +81,13 @@ export default async function AdminCategories() {
                                 </div>
                             </div>
 
-                            <form action={deleteCategory}>
-                                <input type="hidden" name="id" value={cat.id} />
-                                <button
-                                    type="submit"
-                                    className="p-2 rounded-xl opacity-0 group-hover:opacity-100 hover:bg-red-500/10 text-gray-700 hover:text-red-400 transition-all duration-300 border border-transparent hover:border-red-500/20"
-                                    title="Delete category"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
-                            </form>
+                            <ActionButton
+                                action={deleteCategory}
+                                hiddenFields={{ id: cat.id }}
+                                className="p-2 rounded-xl opacity-0 group-hover:opacity-100 hover:bg-red-500/10 text-gray-700 hover:text-red-400 transition-all duration-300 border border-transparent hover:border-red-500/20"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </ActionButton>
                         </div>
                     </div>
                 ))}

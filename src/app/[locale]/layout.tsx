@@ -4,6 +4,9 @@ import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ReadingProgress } from "@/components/ReadingProgress";
+import SmoothScroll from "@/components/SmoothScroll";
+import ScrollReveal from "@/components/ScrollReveal";
+import CustomCursor from "@/components/CustomCursor";
 import { locales, localeDirection, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/getDictionary";
 import { getSettings } from "@/lib/data";
@@ -85,7 +88,7 @@ export default async function LocaleLayout({
         {/* Anti-flash theme script — runs before first paint to apply stored/system theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else{document.documentElement.setAttribute('data-theme','dark');}}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark');}else{document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}}catch(e){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}})();`,
           }}
         />
         {/* DNS prefetch for Supabase */}
@@ -97,13 +100,17 @@ export default async function LocaleLayout({
         )}
       </head>
       <body className={`min-h-full flex flex-col bg-background text-foreground selection:bg-gold-400/20 selection:text-gold-300 ${dir === 'rtl' ? 'font-arabic' : 'font-sans'}`}>
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">
-          Aller au contenu principal
-        </a>
-        <ReadingProgress />
-        <Header locale={lang} dict={dict} logoText={settings?.logo_text ?? 'MB'} />
-        <main id="main-content" className="flex-grow flex flex-col" aria-label="Main content">{children}</main>
-        <Footer locale={lang} dict={dict} settings={settings} />
+        <SmoothScroll>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">
+            Aller au contenu principal
+          </a>
+          <ScrollReveal />
+          <CustomCursor />
+          <ReadingProgress />
+          <Header locale={lang} dict={dict} logoText={settings?.logo_text ?? 'MB'} />
+          <main id="main-content" className="flex-grow flex flex-col" aria-label="Main content">{children}</main>
+          <Footer locale={lang} dict={dict} settings={settings} />
+        </SmoothScroll>
       </body>
     </html>
   );

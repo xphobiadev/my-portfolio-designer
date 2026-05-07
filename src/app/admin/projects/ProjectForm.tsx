@@ -1,9 +1,10 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import type { Project, Category } from '@/lib/types'
 import { createProject, updateProject } from '../actions'
+import type { ActionResult } from '../actions'
 import { Upload, Save, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
 interface ProjectFormProps {
@@ -14,33 +15,22 @@ interface ProjectFormProps {
 
 export default function ProjectForm({ project, mode, categories }: ProjectFormProps) {
     const router = useRouter()
-    const [loading, setLoading] = useState(false)
-    const [status, setStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
+    const action = mode === 'create' ? createProject : updateProject
+    const [state, formAction, isPending] = useActionState<ActionResult | null, FormData>(action, null)
+    const [redirecting, setRedirecting] = useState(false)
 
-    async function handleSubmit(formData: FormData) {
-        setLoading(true)
-        setStatus({ type: 'info', message: 'Processing...' })
-
-        try {
-            if (mode === 'create') {
-                await createProject(formData)
-            } else {
-                await updateProject(formData)
-            }
-            setStatus({ type: 'success', message: mode === 'create' ? 'Project created successfully!' : 'Project updated successfully!' })
+    useEffect(() => {
+        if (state?.success) {
+            setRedirecting(true)
             setTimeout(() => {
                 router.push('/admin/projects')
                 router.refresh()
             }, 1000)
-        } catch (err) {
-            setStatus({ type: 'error', message: 'An error occurred. Please try again.' })
-        } finally {
-            setLoading(false)
         }
-    }
+    }, [state, router])
 
     return (
-        <form action={handleSubmit} className="space-y-8">
+        <form action={formAction} className="space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <h2 className="text-lg font-heading tracking-wide text-white uppercase">
@@ -234,17 +224,16 @@ export default function ProjectForm({ project, mode, categories }: ProjectFormPr
             </div>
 
             {/* Status Message */}
-            {status && (
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-lg text-xs uppercase tracking-widest ${status.type === 'error'
+            {state && (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-lg text-xs uppercase tracking-widest ${!state.success
                         ? 'text-red-400 bg-red-500/10 border border-red-500/20'
-                        : status.type === 'success'
-                            ? 'text-green-400 bg-green-500/10 border border-green-500/20'
-                            : 'text-gold-400 bg-gold-400/10 border border-gold-400/20'
+                        : 'text-green-400 bg-green-500/10 border border-green-500/20'
                     }`}>
-                    {status.type === 'success' && <CheckCircle className="w-4 h-4" />}
-                    {status.type === 'error' && <AlertCircle className="w-4 h-4" />}
-                    {status.type === 'info' && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {status.message}
+                    {state.success ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                    {state.success
+                        ? (mode === 'create' ? 'Project created successfully!' : 'Project updated successfully!')
+                        : (state.error || 'An error occurred. Please try again.')
+                    }
                 </div>
             )}
 
@@ -259,11 +248,11 @@ export default function ProjectForm({ project, mode, categories }: ProjectFormPr
                 </button>
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={isPending || redirecting}
                     className="flex items-center gap-2 bg-gold-400 text-black px-8 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5"
                 >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    {loading ? 'Processing...' : mode === 'create' ? 'Create Project' : 'Save Changes'}
+                    {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    {isPending ? 'Processing...' : redirecting ? 'Redirecting...' : mode === 'create' ? 'Create Project' : 'Save Changes'}
                 </button>
             </div>
         </form>

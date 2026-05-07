@@ -1,6 +1,7 @@
 import { getSettings } from '@/lib/data';
 import { updateSettings } from '../actions';
 import { Mail, Phone, Globe, Link2, MapPin, MessageCircle } from 'lucide-react';
+import { AdminFormWrapper } from '../components/AdminFormWrapper';
 
 export default async function AdminContact() {
     const settings = await getSettings();
@@ -22,7 +23,7 @@ export default async function AdminContact() {
                 </p>
             </div>
 
-            <form action={updateSettings} className="space-y-6">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Contact Info" className="space-y-6">
                 <input type="hidden" name="type" value="contact" />
 
                 {/* Email & Phone */}
@@ -131,13 +132,7 @@ export default async function AdminContact() {
                         </div>
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">
-                        Save Contact Info
-                    </button>
-                </div>
-            </form>
+            </AdminFormWrapper>
         </div>
     );
 }

@@ -2,6 +2,7 @@ import { getContactMessages } from '@/lib/data';
 import { markMessageRead, deleteMessage } from '../actions';
 import type { ContactMessage } from '@/lib/types';
 import { Mail, MailOpen, Trash2, Clock, MessageSquare } from 'lucide-react';
+import { ActionButton } from '../components/AdminFormWrapper';
 
 export default async function AdminMessages() {
     const messages = await getContactMessages();
@@ -53,26 +54,20 @@ export default async function AdminMessages() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2 flex-shrink-0">
-                                    <form action={markMessageRead}>
-                                        <input type="hidden" name="id" value={msg.id} />
-                                        <button
-                                            type="submit"
-                                            className="p-2.5 rounded-xl border border-white/[0.06] text-gray-500 hover:text-emerald-400 hover:border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300"
-                                            title="Mark as read"
-                                        >
-                                            <MailOpen className="w-4 h-4" />
-                                        </button>
-                                    </form>
-                                    <form action={deleteMessage}>
-                                        <input type="hidden" name="id" value={msg.id} />
-                                        <button
-                                            type="submit"
-                                            className="p-2.5 rounded-xl border border-white/[0.06] text-gray-500 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/10 transition-all duration-300"
-                                            title="Delete"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </form>
+                                    <ActionButton
+                                        action={markMessageRead}
+                                        hiddenFields={{ id: msg.id }}
+                                        className="p-2.5 rounded-xl border border-white/[0.06] text-gray-500 hover:text-emerald-400 hover:border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-300"
+                                    >
+                                        <MailOpen className="w-4 h-4" />
+                                    </ActionButton>
+                                    <ActionButton
+                                        action={deleteMessage}
+                                        hiddenFields={{ id: msg.id }}
+                                        className="p-2.5 rounded-xl border border-white/[0.06] text-gray-500 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/10 transition-all duration-300"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </ActionButton>
                                 </div>
                             </div>
                         </div>
@@ -106,16 +101,13 @@ export default async function AdminMessages() {
                                         })}
                                     </div>
                                 </div>
-                                <form action={deleteMessage}>
-                                    <input type="hidden" name="id" value={msg.id} />
-                                    <button
-                                        type="submit"
-                                        className="p-2.5 rounded-xl border border-white/[0.04] text-gray-700 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/10 transition-all duration-300"
-                                        title="Delete"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </form>
+                                <ActionButton
+                                    action={deleteMessage}
+                                    hiddenFields={{ id: msg.id }}
+                                    className="p-2.5 rounded-xl border border-white/[0.04] text-gray-700 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/10 transition-all duration-300"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </ActionButton>
                             </div>
                         </div>
                     ))}

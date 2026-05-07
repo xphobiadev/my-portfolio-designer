@@ -53,7 +53,8 @@ export function ProjectCoverUpload({ project }: { project: Project }) {
             const fd = new FormData();
             fd.append("id", project.id);
             fd.append("url", publicUrl);
-            await saveProjectCoverUrl(fd);
+            const result = await saveProjectCoverUrl(null, fd);
+            if (!result.success) throw new Error(result.error || "Failed to save cover URL");
 
             setProgress(100);
             setPreviewUrl(publicUrl);

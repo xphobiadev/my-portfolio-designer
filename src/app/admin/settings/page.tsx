@@ -1,6 +1,7 @@
 import { getSettings } from '@/lib/data';
 import { updateSettings } from '../actions';
 import { Settings, FileText, Type } from 'lucide-react';
+import { AdminFormWrapper } from '../components/AdminFormWrapper';
 
 export default async function AdminSettings() {
     const settings = await getSettings();
@@ -18,7 +19,7 @@ export default async function AdminSettings() {
             </div>
 
             {/* Footer Settings */}
-            <form action={updateSettings} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Footer" className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
                 <input type="hidden" name="type" value="footer" />
                 <div className="flex items-center gap-3">
                     <FileText className="w-4 h-4 text-gold-400" />
@@ -34,16 +35,10 @@ export default async function AdminSettings() {
                         className="w-full bg-black/30 border border-white/10 px-4 py-3 rounded-lg text-white text-sm focus:outline-none focus:border-gold-400/50 transition-colors placeholder:text-gray-600"
                     />
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="bg-gold-400 text-black px-6 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all shadow-lg hover:-translate-y-0.5">
-                        Save Footer
-                    </button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Branding & Marquee Settings */}
-            <form action={updateSettings} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Branding" className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">
                 <input type="hidden" name="type" value="branding" />
                 <div className="flex items-center gap-3">
                     <Type className="w-4 h-4 text-gold-400" />
@@ -72,13 +67,7 @@ export default async function AdminSettings() {
                     />
                     <p className="text-[9px] text-gray-600 mt-1">Comma-separated list, e.g.: DESIGN,PHOTOGRAPHY,VIDEO</p>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="bg-gold-400 text-black px-6 py-3 rounded-lg text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all shadow-lg hover:-translate-y-0.5">
-                        Save Branding
-                    </button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Current Configuration Overview */}
             <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 space-y-5">

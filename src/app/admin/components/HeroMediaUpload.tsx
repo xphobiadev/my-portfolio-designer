@@ -75,9 +75,11 @@ export function HeroMediaUpload({
             fd.append("url", publicUrl);
 
             if (type === "video") {
-                await saveHeroVideoUrl(fd);
+                const result = await saveHeroVideoUrl(null, fd);
+                if (!result.success) throw new Error(result.error || "Failed to save video URL");
             } else {
-                await saveHeroImageUrl(fd);
+                const result = await saveHeroImageUrl(null, fd);
+                if (!result.success) throw new Error(result.error || "Failed to save image URL");
             }
 
             setProgress(100);

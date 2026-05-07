@@ -1,6 +1,7 @@
 import { getSettings } from '@/lib/data';
 import { updateSettings } from '../actions';
 import { User, Upload } from 'lucide-react';
+import { AdminFormWrapper } from '../components/AdminFormWrapper';
 
 export default async function AdminAbout() {
     const settings = await getSettings();
@@ -22,7 +23,7 @@ export default async function AdminAbout() {
                 </p>
             </div>
 
-            <form action={updateSettings} className="space-y-6">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save About Settings" className="space-y-6">
                 <input type="hidden" name="type" value="about" />
 
                 {/* Biography */}
@@ -73,13 +74,7 @@ export default async function AdminAbout() {
                         />
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">
-                        Save About Settings
-                    </button>
-                </div>
-            </form>
+            </AdminFormWrapper>
         </div>
     );
 }

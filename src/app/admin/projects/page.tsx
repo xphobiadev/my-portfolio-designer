@@ -4,6 +4,7 @@ import { deleteProject, toggleFeatured } from '../actions';
 import ProjectForm from './ProjectForm';
 import type { Project } from '@/lib/types';
 import { Star, Trash2, Edit3, FolderOpen, Plus } from 'lucide-react';
+import { ActionButton } from '../components/AdminFormWrapper';
 
 export default async function AdminProjects(props: { searchParams?: Promise<{ category?: string }> }) {
     const allProjects = await getProjects();
@@ -96,13 +97,13 @@ export default async function AdminProjects(props: { searchParams?: Promise<{ ca
                                     </td>
                                     <td className="px-6 py-4 text-[10px] text-gray-600 font-mono">{proj.slug}</td>
                                     <td className="px-6 py-4">
-                                        <form action={toggleFeatured}>
-                                            <input type="hidden" name="id" value={proj.id} />
-                                            <input type="hidden" name="is_featured" value={String(proj.is_featured)} />
-                                            <button type="submit" title={proj.is_featured ? 'Remove from featured' : 'Add to featured'}>
-                                                <Star className={`w-4 h-4 transition-colors duration-300 ${proj.is_featured ? 'text-gold-400 fill-gold-400' : 'text-gray-700 hover:text-gold-400'}`} />
-                                            </button>
-                                        </form>
+                                        <ActionButton
+                                            action={toggleFeatured}
+                                            hiddenFields={{ id: proj.id, is_featured: String(proj.is_featured) }}
+                                            className=""
+                                        >
+                                            <Star className={`w-4 h-4 transition-colors duration-300 ${proj.is_featured ? 'text-gold-400 fill-gold-400' : 'text-gray-700 hover:text-gold-400'}`} />
+                                        </ActionButton>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-1.5">
@@ -122,15 +123,14 @@ export default async function AdminProjects(props: { searchParams?: Promise<{ ca
                                             >
                                                 <Edit3 className="w-3 h-3" /> Edit
                                             </Link>
-                                            <form action={deleteProject}>
-                                                <input type="hidden" name="id" value={proj.id} />
-                                                <button
-                                                    type="submit"
-                                                    className="flex items-center gap-1.5 text-[10px] text-gray-700 hover:text-red-400 uppercase tracking-widest transition-colors duration-300"
-                                                >
-                                                    <Trash2 className="w-3 h-3" /> Delete
-                                                </button>
-                                            </form>
+                                            <ActionButton
+                                                action={deleteProject}
+                                                hiddenFields={{ id: proj.id }}
+                                                confirmMessage="Are you sure you want to delete this project?"
+                                                className="flex items-center gap-1.5 text-[10px] text-gray-700 hover:text-red-400 uppercase tracking-widest transition-colors duration-300"
+                                            >
+                                                <Trash2 className="w-3 h-3" /> Delete
+                                            </ActionButton>
                                         </div>
                                     </td>
                                 </tr>

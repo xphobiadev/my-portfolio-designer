@@ -4,6 +4,7 @@ import { BarChart3, Type, Layers, Briefcase, MousePointerClick, Sparkles } from 
 import type { Project } from '@/lib/types';
 import { HeroMediaUpload } from '../components/HeroMediaUpload';
 import { ProjectCoverUpload } from '../components/ProjectCoverUpload';
+import { AdminFormWrapper } from '../components/AdminFormWrapper';
 
 export default async function AdminHome() {
     const settings = await getSettings();
@@ -27,7 +28,7 @@ export default async function AdminHome() {
             </div>
 
             {/* Hero Text Settings */}
-            <form action={updateSettings} className="admin-card p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Hero Text" className="admin-card p-6 space-y-5">
                 <input type="hidden" name="type" value="hero" />
                 <div className="flex items-center gap-3 mb-4">
                     <Type className="w-4 h-4 text-gold-400" />
@@ -76,14 +77,10 @@ export default async function AdminHome() {
                         className="admin-input resize-none"
                     />
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Save Hero Text</button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Hero CTA Button */}
-            <form action={updateSettings} className="admin-card p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save CTA" className="admin-card p-6 space-y-5">
                 <input type="hidden" name="type" value="hero_cta" />
                 <div className="flex items-center gap-3 mb-4">
                     <MousePointerClick className="w-4 h-4 text-gold-400" />
@@ -110,14 +107,10 @@ export default async function AdminHome() {
                         />
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Save CTA</button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Stats Settings */}
-            <form action={updateSettings} className="admin-card p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Stats" className="admin-card p-6 space-y-5">
                 <input type="hidden" name="type" value="stats" />
                 <div className="flex items-center gap-3 mb-4">
                     <BarChart3 className="w-4 h-4 text-gold-400" />
@@ -143,14 +136,10 @@ export default async function AdminHome() {
                         </div>
                     ))}
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Save Stats</button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Featured Projects Section */}
-            <form action={updateSettings} className="admin-card p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Featured Section" className="admin-card p-6 space-y-5">
                 <input type="hidden" name="type" value="featured" />
                 <div className="flex items-center gap-3 mb-4">
                     <Layers className="w-4 h-4 text-gold-400" />
@@ -171,11 +160,7 @@ export default async function AdminHome() {
                         <input name="featured_view_all_text" defaultValue={settings?.featured_view_all_text || 'View All Projects'} className="admin-input" />
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Save Featured Section</button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Featured Projects Cover Images */}
             <div className="admin-card p-6 space-y-5">
@@ -200,7 +185,7 @@ export default async function AdminHome() {
             </div>
 
             {/* Services Section */}
-            <form action={updateSettings} className="admin-card p-6 space-y-5">
+            <AdminFormWrapper action={updateSettings} submitLabel="Save Services" className="admin-card p-6 space-y-5">
                 <input type="hidden" name="type" value="services" />
                 <div className="flex items-center gap-3 mb-4">
                     <Briefcase className="w-4 h-4 text-gold-400" />
@@ -259,11 +244,7 @@ export default async function AdminHome() {
                         ))}
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-2">
-                    <button type="submit" className="admin-btn">Save Services</button>
-                </div>
-            </form>
+            </AdminFormWrapper>
 
             {/* Hero Video Upload — direct browser→Supabase, bypasses Vercel 4.5MB limit */}
             <HeroMediaUpload
