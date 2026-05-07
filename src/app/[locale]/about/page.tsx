@@ -146,7 +146,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
                                 <h3 className="text-base md:text-lg font-heading font-semibold tracking-wide text-white mb-2 md:mb-3 group-hover:text-gold-400 transition-colors duration-500">
                                     {service.title}
                                 </h3>
-                                <p className="text-xs md:text-sm font-light text-gray-500 mb-4 md:mb-5 leading-relaxed group-hover:text-gray-400 transition-colors duration-500">
+                                <p className="text-sm font-light text-gray-500 mb-4 md:mb-5 leading-relaxed group-hover:text-gray-400 transition-colors duration-500">
                                     {service.desc}
                                 </p>
                                 <div className="pt-3 md:pt-4 border-t border-white/[0.04]">

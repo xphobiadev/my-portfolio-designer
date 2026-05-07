@@ -66,17 +66,33 @@ export default function TextReveal({
 
   return (
     <Tag ref={ref as any} className={`${className}`} style={style} aria-label={text}>
-      {units.map((unit, i) => (
-        <span
-          key={i}
-          className="inline-block"
-          style={getAnimationStyle(i)}
-          aria-hidden="true"
-        >
-          {unit === ' ' ? '\u00A0' : unit}
-          {splitBy === 'word' && i < units.length - 1 ? '\u00A0' : ''}
-        </span>
-      ))}
+      {splitBy === 'word'
+        ? units.map((unit, i) => (
+            <span
+              key={i}
+              className="inline-block whitespace-nowrap"
+              style={getAnimationStyle(i)}
+              aria-hidden="true"
+            >
+              {unit}
+              {i < units.length - 1 ? '\u00A0' : ''}
+            </span>
+          ))
+        : units.map((unit, i) => {
+            // Group chars into word-spans to prevent mid-word breaks
+            const isSpace = unit === ' ';
+            return (
+              <span
+                key={i}
+                className={isSpace ? 'inline-block' : 'inline-block whitespace-nowrap'}
+                style={getAnimationStyle(i)}
+                aria-hidden="true"
+              >
+                {isSpace ? '\u00A0' : unit}
+              </span>
+            );
+          })
+      }
     </Tag>
   );
 }

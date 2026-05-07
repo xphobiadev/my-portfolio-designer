@@ -113,17 +113,18 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
                             <p className="text-[9px] uppercase tracking-[0.3em] text-gray-600 mb-4 md:mb-5">{dict.contact.followMe}</p>
                             <div className="flex flex-wrap gap-2 md:gap-3">
                                 {[
-                                    { name: 'Instagram', url: settings?.contact_instagram },
-                                    { name: 'Behance', url: settings?.contact_behance },
-                                    { name: 'LinkedIn', url: settings?.contact_linkedin },
-                                ].filter(s => s.url).map((social) => (
+                                    { name: 'Instagram', url: settings?.contact_instagram || 'https://instagram.com' },
+                                    { name: 'Behance', url: settings?.contact_behance || 'https://behance.net' },
+                                    { name: 'LinkedIn', url: settings?.contact_linkedin || 'https://linkedin.com' },
+                                ].map((social) => (
                                     <a
                                         key={social.name}
-                                        href={social.url!}
+                                        href={social.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-3 md:px-4 py-2 border border-white/[0.06] rounded-full text-[10px] uppercase tracking-[0.15em] text-gray-500 hover:text-gold-400 hover:border-gold-400/20 active:text-gold-400 transition-all duration-500"
+                                        className="inline-flex items-center gap-1.5 px-3 md:px-4 py-2 border border-white/[0.06] rounded-full text-[10px] uppercase tracking-[0.15em] text-gray-500 hover:text-gold-400 hover:border-gold-400/20 active:text-gold-400 transition-all duration-500"
                                     >
+                                        <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
                                         {social.name}
                                     </a>
                                 ))}

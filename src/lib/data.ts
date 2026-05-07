@@ -50,7 +50,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     try {
         await connection();
         const supabase = getSupabase();
-        const { data, error } = await supabase
+        const { data: featured, error } = await supabase
             .from('projects')
             .select('*')
             .eq('is_featured', true)
@@ -62,12 +62,17 @@ export async function getFeaturedProjects(): Promise<Project[]> {
             const allProjects = await getProjects();
             return allProjects.slice(0, 6);
         }
-        // If no featured projects, return latest 6
-        if (!data || data.length === 0) {
-            const allProjects = await getProjects();
-            return allProjects.slice(0, 6);
-        }
-        return data;
+
+        // If we have 6 featured projects, return them directly
+        if (featured && featured.length >= 6) return featured;
+
+        // Otherwise pad with the most recent non-featured projects to always
+        // fill the grid (min 3 cards so the layout looks intentional)
+        const allProjects = await getProjects();
+        const featuredIds = new Set((featured ?? []).map((p: Project) => p.id));
+        const extra = allProjects.filter((p: Project) => !featuredIds.has(p.id));
+        const combined = [...(featured ?? []), ...extra].slice(0, 6);
+        return combined;
     } catch (err) {
         console.warn("getFeaturedProjects exception, returning empty:", err);
         return [];

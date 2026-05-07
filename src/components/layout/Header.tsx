@@ -68,10 +68,9 @@ export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dicti
     const navLinks = [
         { name: dict.nav.work, path: `/${locale}/work` },
         { name: dict.nav.photography, path: `/${locale}/photography` },
-        { name: dict.nav.videos, path: `/${locale}/videos` },
-        { name: dict.nav.audio, path: `/${locale}/audio` },
+        { name: dict.nav.videos, path: `/${locale}/videos`, soon: true },
+        { name: dict.nav.audio, path: `/${locale}/audio`, soon: true },
         { name: dict.nav.about, path: `/${locale}/about` },
-        { name: dict.nav.contact, path: `/${locale}/contact` },
     ];
 
     return (
@@ -123,19 +122,24 @@ export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dicti
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main navigation">
+                    <nav className="hidden md:flex items-center gap-0 xl:gap-1" aria-label="Main navigation">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
                                 href={link.path}
                                 aria-current={isActive(link.path) ? "page" : undefined}
-                                className={`relative px-4 xl:px-5 py-3 min-h-[44px] inline-flex items-center text-[12px] xl:text-[13px] uppercase tracking-[0.15em] font-medium transition-all duration-300 rounded-full group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
+                                className={`relative px-3 xl:px-4 py-2.5 min-h-[44px] inline-flex items-center gap-1.5 text-[11px] xl:text-[12px] uppercase tracking-[0.12em] font-medium transition-all duration-300 rounded-full group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
                                     isActive(link.path)
                                         ? "text-[var(--color-accent)]"
                                         : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
                                 }`}
                             >
                                 <span className="relative z-10">{link.name}</span>
+                                {link.soon && (
+                                    <span className="relative z-10 px-1 py-0.5 rounded text-[7px] tracking-[0.1em] uppercase font-bold bg-[var(--color-accent)]/10 text-[var(--color-accent)] border border-[var(--color-accent)]/20 leading-none">
+                                        {dict.footer.comingSoon}
+                                    </span>
+                                )}
                                 {/* Hover underline animation - scale from center */}
                                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-secondary)] group-hover:w-3/4 transition-all duration-300 ease-out rounded-full" />
                                 {/* Active indicator */}
@@ -158,7 +162,7 @@ export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dicti
                         {/* CTA Button with magnetic feel */}
                         <Link
                             href={`/${locale}/contact`}
-                            className="hidden md:inline-flex items-center gap-2 px-6 xl:px-7 py-3 xl:py-3.5 text-[11px] xl:text-[12px] uppercase tracking-[0.15em] font-bold bg-[var(--color-accent)] text-[var(--color-bg)] rounded-full hover:scale-105 hover:shadow-[0_0_40px_var(--color-glow)] transition-all duration-300 magnetic-btn relative overflow-hidden group"
+                            className="hidden lg:inline-flex items-center gap-2 px-5 xl:px-6 py-2.5 xl:py-3 text-[10px] xl:text-[11px] uppercase tracking-[0.15em] font-bold bg-[var(--color-accent)] text-[var(--color-bg)] rounded-full hover:scale-105 hover:shadow-[0_0_40px_var(--color-glow)] transition-all duration-300 magnetic-btn relative overflow-hidden group"
                         >
                             <span className="relative z-10">{dict.nav.letsTalk}</span>
                             <ArrowUpRight className="w-3.5 h-3.5 xl:w-4 xl:h-4 relative z-10 group-hover:rotate-45 transition-transform duration-300" aria-hidden="true" />
@@ -167,7 +171,7 @@ export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dicti
                         {/* Mobile menu toggle */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="lg:hidden relative w-11 h-11 flex items-center justify-center rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-surface)] transition-all duration-300"
+                            className="md:hidden relative w-11 h-11 flex items-center justify-center rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-surface)] transition-all duration-300"
                             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                             aria-expanded={mobileMenuOpen}
                             aria-controls="mobile-menu"
@@ -229,13 +233,18 @@ export function Header({ locale, dict, logoText }: { locale: Locale; dict: Dicti
                                         href={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
                                         aria-current={isActive(link.path) ? "page" : undefined}
-                                        className={`block text-2xl sm:text-3xl font-heading font-bold uppercase tracking-wider py-3 px-8 min-h-[44px] rounded-xl transition-all duration-300 ${
+                                        className={`inline-flex items-center justify-center gap-2 text-2xl sm:text-3xl font-heading font-bold uppercase tracking-wider py-3 px-8 min-h-[44px] rounded-xl transition-all duration-300 ${
                                             isActive(link.path)
                                                 ? "gradient-text"
                                                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
                                         }`}
                                     >
                                         {link.name}
+                                        {link.soon && (
+                                            <span className="px-1.5 py-0.5 rounded text-[8px] tracking-[0.1em] uppercase font-bold bg-[var(--color-accent)]/10 text-[var(--color-accent)] border border-[var(--color-accent)]/20 leading-none self-center">
+                                                {dict.footer.comingSoon}
+                                            </span>
+                                        )}
                                     </Link>
                                 </motion.div>
                             ))}

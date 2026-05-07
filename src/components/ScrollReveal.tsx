@@ -1,15 +1,20 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function ScrollReveal() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const selector = '.reveal, .reveal-left, .reveal-right, .reveal-scale';
+
+    const intersectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
-            observer.unobserve(entry.target);
+            intersectionObserver.unobserve(entry.target);
           }
         });
       },
@@ -19,11 +24,33 @@ export default function ScrollReveal() {
       }
     );
 
-    const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
-    elements.forEach((el) => observer.observe(el));
+    const observe = () => {
+      document.querySelectorAll(selector).forEach((el) => {
+        // Only observe elements that haven't been revealed yet
+        if (!el.classList.contains('revealed')) {
+          intersectionObserver.observe(el);
+        }
+      });
+    };
 
-    return () => observer.disconnect();
-  }, []);
+    // Initial observation
+    observe();
+
+    // Watch for new elements added by client-side navigation / hydration
+    const mutationObserver = new MutationObserver(() => {
+      observe();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      intersectionObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [pathname]); // Re-run on every route change so new page elements are picked up
 
   return null;
 }

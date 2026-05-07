@@ -356,7 +356,7 @@ export default function HomeClient({ locale, dict, projects, settings }: HomeCli
                       <h3 className="text-sm md:text-base font-heading font-semibold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors duration-500 mb-2">
                         {skill.title}
                       </h3>
-                      <p className="text-xs md:text-sm text-[var(--color-text-muted)] font-light leading-relaxed group-hover:text-[var(--color-text-secondary)] transition-colors duration-500 line-clamp-3">
+                      <p className="text-sm text-[var(--color-text-muted)] font-light leading-relaxed group-hover:text-[var(--color-text-secondary)] transition-colors duration-500 line-clamp-3">
                         {skill.desc}
                       </p>
                     </div>
